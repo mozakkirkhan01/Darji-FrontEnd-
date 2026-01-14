@@ -1,0 +1,92 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Customer List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Customer List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <!-- <h5 class="card-title">List Customer
+                            <button class="btn btn-primary btn-sm" style="float: right;"
+                                routerLink="/admin/Sell">New Sell</button>
+                        </h5> -->
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('CustomerName')">Customer Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('MobileNo')">Contact No</th>
+                                        <th style="cursor: pointer;" (click)="sort('GSTNo')">GSTIN</th>
+                                        <!-- <th>View Details</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of CustomerList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.CustomerName}}</td>
+                                            <td>{{model.MobileNo}}</td>
+                                            <td>{{model.GSTNo}}</td>
+
+                                            
+                                            <!-- <td>
+                                                <button class="btn btn-sm btn-secondary" (click)="getPurchaseDetail(model)"><i
+                                                        class="bi bi-card-text"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning"><i
+                                                        class="bi bi-pencil-square" (click)="editPurchase(model)"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deletePurchase(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                    
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+

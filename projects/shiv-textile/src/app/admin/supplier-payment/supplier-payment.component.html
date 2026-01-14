@@ -1,0 +1,244 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Make Supplier Payment</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Make Supplier Payment</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Supplier Detail
+                            <a style="float: right;font-size: 14px;" routerLink="/admin/supplier">Detail Supplier
+                            </a>
+                        </h5>
+                        <form #myForm="ngForm">
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Supplier <span class="text-danger">*</span></label>
+                                    <ng-autocomplete [data]="SupplierList" [searchKeyword]="'CompanyName'"
+                                        placeholder="Enter Supplier Detail" (selected)='afterSupplierSelected($event)'
+                                        name="supplierAutoComplete" [itemTemplate]="itemTemplate"
+                                        [notFoundTemplate]="notFoundTemplate" #SupplierAutoCompleter="ngModel"
+                                        [(ngModel)]="Purchase.SupplierAutoCompleter" [isLoading]="dataLoading"
+                                        (inputCleared)="clearSupplier()" [minQueryLength]="1" required="required"
+                                        [autofocus]="Purchase.Purchase">
+                                    </ng-autocomplete>
+
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.CompanyName"></a>
+                                    </ng-template>
+
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div>
+                                            <a class="new-link" routerLink="/admin/supplier">New Supplier</a>
+                                        </div>
+                                    </ng-template>
+                                    <div *ngIf="SupplierAutoCompleter.invalid && (SupplierAutoCompleter.dirty || SupplierAutoCompleter.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="SupplierAutoCompleter.errors?.['required']">
+                                            Supplier is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" [value]="SelectedSupplier.CompanyName"
+                                        class="form-control">
+
+                                </div>
+
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Contact Person Name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" [value]="SelectedSupplier.ContactPersonName"
+                                        class="form-control">
+
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Mobile No. <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" [value]="SelectedSupplier.MobileNo"
+                                        class="form-control">
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">GST No. <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" [value]="SelectedSupplier.GSTNo"
+                                        class="form-control">
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Payment Date <span class="text-danger">*</span></label>
+                                    <input type="date" #PaymentDate="ngModel" [(ngModel)]="payment.PaymentDate"
+                                        class="form-control" name="PaymentDate"
+                                        [ngClass]="{'is-invalid':submitted && PaymentDate.invalid}" required autofocus>
+                                    <div *ngIf="PaymentDate.invalid && (PaymentDate.dirty || PaymentDate.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="PaymentDate.errors?.['required']">
+                                            Payment Date is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Total Amount <span class="text-danger">*</span></label>
+                                    <input type="number" #TotalAmount="ngModel" [(ngModel)]="payment.TotalAmount"
+                                        class="form-control" name="TotalAmount"
+                                        [ngClass]="{'is-invalid':submitted && TotalAmount.invalid}" required autofocus>
+
+                                    <div *ngIf="TotalAmount.invalid && (TotalAmount.dirty || TotalAmount.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="TotalAmount.errors?.['required']">
+                                            Total Amount is required.
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Payment Mode <span class="text-danger">*</span></label>
+                                    <select class="form-select" #PaymentMode="ngModel" [(ngModel)]="payment.PaymentMode"
+                                        name="PaymentMode" [ngClass]="{'is-invalid':submitted && PaymentMode.invalid}"
+                                        required autofocus>
+                                        <option value="">--Select Payment Mode--</option>
+                                        <option [value]="model.Key" *ngFor="let model of PaymentModeList">
+                                            {{model.Value}}</option>
+                                    </select>
+                                    <div *ngIf="PaymentMode.invalid && (PaymentMode.dirty || PaymentMode.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="PaymentMode.errors?.['required']">
+                                            Payment Mode is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Transaction Details </label>
+                                    <input type="text" #TransactionDetail="ngModel"
+                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="payment.TransactionDetail"
+                                        class="form-control">
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Remarks </label>
+                                    <textarea #Remarks="ngModel" [(ngModel)]="payment.Remarks"
+                                        [ngModelOptions]="{standalone: true}" class="form-control"></textarea>
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select" #Status="ngModel" [(ngModel)]="payment.Status"
+                                        name="Status" [ngClass]="{'is-invalid':submitted && Status.invalid}" required
+                                        autofocus>
+                                        <option value="">--Select Status--</option>
+                                        <option [value]="model.Key" *ngFor="let model of PaymentStatusList">
+                                            {{model.Value}}</option>
+                                    </select>
+                                    <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="Status.errors?.['required']">
+                                            Status is required.
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <button type="button" class="btn btn-primary"
+                                            (click)="SaveSupplierPayment(myForm)">Sumbit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action active" aria-current="true">
+                                Payment Details
+                            </a>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="row">
+                                    <div class="dataTable-top">
+                                        <div class="dataTable-dropdown">
+                                            <select class="dataTable-selector form-select form-select-sm"
+                                                [(ngModel)]="itemPerPage">
+                                                <option *ngFor="let option of pageSize" [value]="option">{{option}}
+                                                </option>
+                                            </select>
+                                            entries per page
+                                        </div>
+                                        <div class="dataTable-search"><input
+                                                class="dataTable-input form-control form-control-sm"
+                                                [(ngModel)]="Search" placeholder="Search..." type="text"></div>
+                                    </div>
+                                    <div class="col-lg-12 table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Supplier Name</th>
+                                                    <th>Payment Date</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Payment Mode</th>
+                                                    <th>Transaction Details</th>
+                                                    <th>Remarks</th>
+                                                    <th>Payment Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    *ngFor="let model of SupplierPaymentList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                                    <td>{{i+ 1}}</td>
+                                                    <td>{{model.CompanyName}}</td>
+                                                    <td>{{model.PaymentDate|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{model.TotalAmount}}</td>
+                                                    <td>{{model.PaymentModeName}}</td>
+                                                    <td>{{model.TransactionDetail}}</td>
+                                                    <td>{{model.Remarks}}</td>
+                                                    <td><span
+                                                            [ngClass]="model.StatusName=='Paid'?'text-success':'text-danger'">{{model.StatusName}}</span>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" (click)="editPayment(model)"><i
+                                                               class="bi bi-pencil"></i></button>
+                                                        <!-- <br>
+                                                                <button class="btn btn-sm btn-danger"><i
+                                                                    class="bi bi-trash-fill"></i></button> -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="dataTable-bottom">
+                                        <pagination-controls (pageChange)="onTableDataChange($event)"
+                                            style="float: right;" class="my-pagination"></pagination-controls>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+
+
+
+                    </div>
+                    <!-- <div class="card-footer text-center" *ngIf="!myForm.invalid">
+                        <button type="button" class="btn btn-primary"
+                            >Sumbit</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_product" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <app-edit-product></app-edit-product>
+        </div>
+    </div>
+</div>

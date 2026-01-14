@@ -1,0 +1,245 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Employee</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Manage Employee</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Employee
+                            <button class="btn btn-primary btn-sm" style="float: right;" (click)="newEmployee(myForm)"> Add
+                                New</button>
+                        </h5>
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('EmployeeName')">Employee Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('UserName')">User Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('EmployeeTypeName')">Employee Type</th>
+                                        <th style="cursor: pointer;" (click)="sort('EmployeeCode')">Employee Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Mobile No</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Alternate No</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Email</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Full Address</th>
+                                        <th style="cursor: pointer;" (click)="sort('ShopName')">Shop</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of EmployeeList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.EmployeeName}}</td>
+                                            <td>{{model.UserName}}</td>
+                                            <td>{{model.EmployeeTypeName}}</td>
+                                            <td>{{model.EmployeeCode}}</td>
+                                            <td>{{model.MobileNo}}</td>
+                                            <td>{{model.AlternateNo}}</td>
+                                            <td>{{model.Email}}</td>
+                                            <td>{{model.FullAddress}}</td>
+                                            <td>{{model.ShopName}}</td>
+                                            <td><span
+                                                    [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
+                                                    {{model.StatusName}}</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" (click)="editEmployee(model)"><i
+                                                        class="bi bi-pencil-square"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deleteEmployee(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{Employee.EmployeeId > 0 ? 'Update' : 'New'}} Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #myForm="ngForm">
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
+                            <label class="form-label">Select Shop <span class="text-danger">*</span></label>
+                            <select class="form-select" #ShopId="ngModel" [(ngModel)]="Employee.ShopId"
+                                name="ShopId" (change)="selectShopAddress()"
+                                [ngClass]="{'is-invalid':submitted && ShopId.invalid}" required
+                                autofocus>
+                                <option value="">--Select Shop--</option>
+                                <option [value]="model.ShopId" *ngFor="let model of ShopList">
+                                    {{model.ShopName}}</option>
+                            </select>
+                            <div *ngIf="ShopId.invalid && (ShopId.dirty || ShopId.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="ShopId.errors?.['required']">
+                                    Shop is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label class="form-label">Address <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Enter Address" #Address="ngModel" disabled="disabled"
+                                [(ngModel)]="Employee.Address" name="Address" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Employee Name</label>
+                            <input type="text" placeholder="Enter Employee Name" #EmployeeName="ngModel"
+                                [(ngModel)]="Employee.EmployeeName" name="EmployeeName" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && EmployeeName.invalid}" required autofocus>
+
+                            <div *ngIf="EmployeeName.invalid && (EmployeeName.dirty || EmployeeName.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="EmployeeName.errors?.['required']">
+                                    Employee Name is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label class="form-label">User Name</label>
+                            <input type="text" placeholder="Enter User Name" #UserName="ngModel"
+                                [(ngModel)]="Employee.UserName" name="UserName" class="form-control"
+                                >
+
+                            <!-- <div *ngIf="UserName.invalid && (UserName.dirty || UserName.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="UserName.errors?.['required']">
+                                    User Name is required.
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">EmployeeType</label>
+                            <select class="form-select" #EmployeeType="ngModel" [(ngModel)]="Employee.EmployeeType" name="EmployeeType"
+                                [ngClass]="{'is-invalid':submitted && EmployeeType.invalid}" required autofocus>
+                                <option value="">--Select Employee Type--</option>
+                                <option [value]="model.Key" *ngFor="let model of EmployeeTypeList">
+                                    {{model.Value}}</option>
+                            </select>
+                            <div *ngIf="EmployeeType.invalid && (EmployeeType.dirty || EmployeeType.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="EmployeeType.errors?.['required']">
+                                    Employee Type is required.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Mobile No</label>
+                            <input type="number" placeholder="Enter Mobile No" #MobileNo="ngModel"
+                                [(ngModel)]="Employee.MobileNo" name="MobileNo" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && MobileNo.invalid}" required autofocus>
+
+                            <div *ngIf="MobileNo.invalid && (MobileNo.dirty || MobileNo.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="MobileNo.errors?.['required']">
+                                    Mobile No is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Alternate No</label>
+                            <input type="text" placeholder="Enter Alternate No" #AlternateNo="ngModel" [(ngModel)]="Employee.AlternateNo"
+                                name="AlternateNo" class="form-control">
+
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Email</label>
+                            <input type="text" placeholder="Enter Email" #Email="ngModel" [(ngModel)]="Employee.Email"
+                                name="Email" class="form-control">
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Full Address</label>
+                            <textarea placeholder="Enter Full Address" #FullAddress="ngModel"
+                                [(ngModel)]="Employee.FullAddress" name="FullAddress" class="form-control"></textarea>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Login Password</label>
+                            <input type="password" placeholder="Enter Login Password" #LoginPassword="ngModel"
+                                [(ngModel)]="Employee.LoginPassword" name="LoginPassword" class="form-control"
+                                >
+
+                            <!-- <div *ngIf="LoginPassword.invalid && (LoginPassword.dirty || LoginPassword.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="LoginPassword.errors?.['required']">
+                                    Login Password is required.
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" #Status="ngModel" [(ngModel)]="Employee.Status" name="Status"
+                                [ngClass]="{'is-invalid':submitted && Status.invalid}" required autofocus>
+                                <option value="">--Select Status--</option>
+                                <option [value]="model.Key" *ngFor="let model of StatusList">
+                                    {{model.Value}}</option>
+                            </select>
+                            <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="Status.errors?.['required']">
+                                    Status is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveEmployee(myForm)">Save changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>

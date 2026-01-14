@@ -1,0 +1,151 @@
+
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Category Master</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Category Master</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Category
+                            <button class="btn btn-primary btn-sm" style="float: right;" (click)="newCategory(myForm)"> Add
+                                New</button>
+                        </h5>
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search" placeholder="Search..."
+                                        type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('ItemTypeName')">Item Type</th>
+                                        <th style="cursor: pointer;" (click)="sort('CategoryName')">Category Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Status</th>
+                                        <th style="cursor: pointer;" (click)="sort('UpdatedDate')">Updated On</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of CategoryList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.ItemTypeName}}</td>
+                                            <td>{{model.CategoryName}}</td>
+                                            <td><span [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
+                                                    {{model.StatusName}}</span></td>
+                                            <td>{{model.UpdatedDate|date:'dd-MM-yyyy HH:mm a'}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" (click)="editCategory(model)"><i
+                                                        class="bi bi-pencil-square"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deleteCategory(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{Category.CategoryId > 0 ? 'Update' : 'New'}} Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #myForm="ngForm">
+                    <div class="row">
+                        
+                        <div class="col-sm-12 form-group">
+                            <label class="form-label">Category Name</label>
+                            <input type="text" placeholder="Enter Category Name" #CategoryName="ngModel"
+                                [(ngModel)]="Category.CategoryName" name="CategoryName" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && CategoryName.invalid}" required autofocus>
+
+                            <div *ngIf="CategoryName.invalid && (CategoryName.dirty || CategoryName.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="CategoryName.errors?.['required']">
+                                    Category Name is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label class="form-label">Item Type</label>
+                            <select class="form-select" #ItemType="ngModel" [(ngModel)]="Category.ItemType" name="ItemType"
+                                [ngClass]="{'is-invalid':submitted && ItemType.invalid}" required autofocus>
+                                <option value="">--Select ItemType--</option>
+                                <option [value]="model.Key" *ngFor="let model of ItemTypeList">
+                                    {{model.Value}}</option>
+                            </select>
+                            <div *ngIf="ItemType.invalid && (ItemType.dirty || ItemType.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="ItemType.errors?.['required']">
+                                    Data is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 form-group">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" #Status="ngModel" [(ngModel)]="Category.Status" name="Status"
+                                [ngClass]="{'is-invalid':submitted && Status.invalid}" required autofocus>
+                                <option value="">--Select Status--</option>
+                                <option [value]="model.Key" *ngFor="let model of StatusList">
+                                    {{model.Value}}</option>
+                            </select>
+                            <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="Status.errors?.['required']">
+                                    Status is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveCategory(myForm)">Save changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>

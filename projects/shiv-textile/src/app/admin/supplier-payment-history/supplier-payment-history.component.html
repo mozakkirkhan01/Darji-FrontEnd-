@@ -1,0 +1,95 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Supplier Payment History</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Supplier Payment History</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Purchase
+                            <button class="btn btn-primary btn-sm" style="float: right;"
+                                routerLink="/admin/purchase">New Purchase</button>
+                        </h5>
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('CompanyName')">Suplier Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('TotalPurchase')">Total Purchase
+                                            Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('TotalPaid')">Total Paid Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('TotalDue')">Total Due Amount</th>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of PartyPaymentList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.CompanyName}}</td>
+                                            <td>{{model.TotalPurchase}}</td>
+                                            <td>{{model.TotalPaid}}</td>
+                                            <td>{{model.TotalPurchase - model.TotalPaid}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                    <!-- <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>TOTAL</th>
+                                            <th>{{PurchaseTotal.TaxableAmount}}</th>
+                                            <th>{{PurchaseTotal.CGSTAmount}}</th>
+                                            <th>{{PurchaseTotal.SGSTAmount}}</th>
+                                            <th>{{PurchaseTotal.IGSTAmount}}</th>
+                                            <th>{{PurchaseTotal.NetAmount}}</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot> -->
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>

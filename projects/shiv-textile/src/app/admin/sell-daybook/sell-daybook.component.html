@@ -1,0 +1,129 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Sell Day Book</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Sell Report</li>
+                <li class="breadcrumb-item active">Sell Day Book</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Daily List Sell
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
+                        </h5>
+
+                        <div class="row">
+
+                            <div class="row form-group col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>From Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.FromDate" class="form-control">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>To Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.ToDate" class="form-control">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label>Select Shop <span class="text-danger">*</span></label>
+                                    <select class="form-select" #ShopId="ngModel" [(ngModel)]="SalesMan.ShopId"
+                                        name="ShopId" (change)="selectShopAddress()">
+                                        <option value="">--Select Shop--</option>
+                                        <option [value]="model.ShopId" *ngFor="let model of ShopList">
+                                            {{model.ShopName}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-3">
+                                    <label>Address <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Enter Address" #Address="ngModel"
+                                        disabled="disabled" [(ngModel)]="SalesMan.Address" name="Address"
+                                        class="form-control">
+                                </div>
+                                <div class="col-sm-3" style="margin-top: 20px;">
+                                    <button (click)="getSellDaybookReport()" class="btn btn-success">Sell</button>
+                                </div>
+                            </div>
+
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+
+
+
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover" #table1>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th style="cursor: pointer;" (click)="sort('BillDate')">Date</th>
+                                            <th style="cursor: pointer;" (click)="sort('ShopName')">Shop Name</th>
+                                            <th style="cursor: pointer;" (click)="sort('Address')">Address</th>
+                                            <th style="cursor: pointer;" (click)="sort('SellAmount')">Sell Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('DirectSellAmount')">Direct Sell Amt.</th>
+                                            <th style="cursor: pointer;" (click)="sort('FinalAmount')">Final Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of SellDaybookReport|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.BillDate|date:'dd-MM-yyyy'}}</td>
+                                            <td>{{model.ShopName}}</td>
+                                            <td>{{model.Address}}</td>
+                                            <td>{{model.SellAmount}}</td>
+                                            <td>{{model.DirectSellAmount}}</td>
+                                            <td>{{model.FinalAmount}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>TOTAL</th>
+                                            <th>{{SellTotal.SellAmount|number}}</th>
+                                            <th>{{SellTotal.DirectSellAmount|number}}</th>
+                                            <th>{{SellTotal.FinalAmount|number}}</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-primary" (click)="exportToExcel()">Export To
+                            Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>

@@ -1,0 +1,110 @@
+/* You can add global styles to this file, and also import other style files */
+
+.processDiv {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+    /* background-image: url('./assets/spinners/progress.gif'); */
+    background-size: 100px 100px;
+    z-index: 34249322;
+  }
+  
+  .fullDiv {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-transition: 0.5s;
+    overflow: auto;
+    transition: all 0.3s linear;
+    z-index: 3424565656;
+    opacity: 20;
+    top: 0;
+    left: 0;
+  }
+
+  
+.form-group{
+  padding-bottom: 10px;
+}
+
+a{
+  cursor: pointer;
+}
+.new-link{
+  font-size: 13px;
+  font-weight: bold;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.autocomplete-container .input-container input {
+  font-size: 14px;
+  padding: 0 6px;
+  height: 25px;
+}
+.autocomplete-container .suggestions-container {
+  z-index: 9999;
+}
+
+.form-select, .form-control,.autocomplete-container .input-container input{
+  padding:0.2rem 0.4rem !important;
+  font-size: 0.8rem !important;
+
+}
+
+.autocomplete-container .input-container input{
+  display: block !important;
+  width: 100% !important;
+  padding:0.2rem 0.4rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  color: #212529 !important;
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #ced4da !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important; 
+  border-radius: 0.375rem !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+  height: auto !important;
+}
+.autocomplete-container{
+  box-shadow: none !important;
+  height: auto !important;
+}
+.autocomplete-container .suggestions-container ul li a,.text-danger{
+font-size: 0.8rem !important;
+}
+.autocomplete-container .suggestions-container ul li a{
+  padding: 5px 10px !important;
+}
+hr{
+  margin: 0.3rem;
+}
+
+.form-label{
+  font-size: 0.8rem;
+}
+
+.btn{
+  padding: 0.1rem 0.3rem !important;
+  border-radius: 3px !important;
+  font-size: 0.7rem !important;
+}
+.list-group-item.active{
+padding:3px 10px !important;
+margin-top: 10px;
+}
+b{
+  font-size: 0.8rem;
+}
+.input_money{
+  width: 70px;
+}
+

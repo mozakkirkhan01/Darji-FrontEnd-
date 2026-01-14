@@ -1,0 +1,147 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Transfer To Shiv Vastralaya List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Transfer To Shiv Vastralaya List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Transfer To Shiv Vastralaya
+                            <button class="btn btn-primary btn-sm" style="float: right;"
+                                routerLink="/admin/transfer-product-to-sv">New Transfer</button>
+                        </h5>
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('TransferDate')">Transfer Date</th>
+                                        <th style="cursor: pointer;" (click)="sort('TransferCode')">Transfer Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('Reasons')">Reasons</th>
+                                        <th style="cursor: pointer;" (click)="sort('TransferBy')">Transfer By</th>
+                                        <th style="cursor: pointer;" (click)="sort('CreatedDate')">Created Date</th>
+                                        <th>View Details</th>
+                                        <!-- <th>Edit</th> -->
+                                        <!-- <th>Delete</th> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of TransferSVList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.TransferDate|date:'dd-MM-yyyy'}}</td>
+                                            <td>{{model.TransferCode}}</td>
+                                            <td>{{model.Reasons}}</td>
+                                            <td>{{model.TransferBy}}</td>
+                                            <td>{{model.CreatedDate|date:'dd-MM-yyyy'}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-secondary" (click)="getTransferToSVDetail(model)"><i
+                                                        class="bi bi-card-text"></i> </button>
+                                            </td>
+                                            <!-- <td>
+                                                <button class="btn btn-sm btn-warning"><i
+                                                        class="bi bi-pencil-square" (click)="editTransferToSV(model)"></i> </button>
+                                            </td> -->
+                                            <!-- <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deletePurchase(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                    
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Transfer Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Transfer Products
+                    </a>
+                    <a class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Stock Code</th>
+                                            <th>Product Name</th>
+                                            <th>Size</th>
+                                            <th>HSN Code</th>
+                                            <th>Quantity</th>
+                                            <th>MRP</th>
+                                            <th>Selling Price</th>
+                                            <th>Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let model of transferProductList; let i = index">
+                                            <td>{{i+ 1}}</td>
+                                            <td>{{model.StockCode}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.SizeName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.MRP}}</td>
+                                            <td>{{model.SellingPrice}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

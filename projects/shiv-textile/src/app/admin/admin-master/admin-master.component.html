@@ -1,0 +1,431 @@
+<!-- ======= Header ======= -->
+<app-progress *ngIf="dataLoading"></app-progress>
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <a class="logo d-flex align-items-center">
+       <img style="width: 140px;" src="/assets/img/master-logo.jpg" alt="">
+        <!-- <h2 ><span style="color:#c7135a">SHIV</span>&nbsp;<span style="color:#f89738">TEXTILE</span></h2> -->
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn" (click)="hideSideBar()"></i>
+    </div><!-- End Logo -->
+
+    <!-- <div class="search-bar">
+      <form class="search-form d-flex align-items-center" method="POST" action="#">
+        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div>End Search Bar -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" data-bs-toggle="dropdown">
+            <img src="assets/img/DLogo.jpg" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{employeeDetail.UserName}}</span>
+          </a><!-- End Profile Iamge Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{employeeDetail.UserName}}</h6>
+              <span>{{employeeDetail.EmployeeTypeName}}</span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center">
+                <i class="bi bi-gear"></i>
+                <span>Account Settings</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center">
+                <i class="bi bi-question-circle"></i>
+                <span>Need Help?</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" (click)="logOut()">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+
+          </ul><!-- End Profile Dropdown Items -->
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link " routerLink="admin-dashboard">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Master Entry</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <!-- <a routerLink="unit">
+              <i class="bi bi-circle"></i><span> Unit Master</span>
+            </a>
+            <a routerLink="category">
+              <i class="bi bi-circle"></i><span>Category Master</span>
+            </a>
+            <a routerLink="size">
+              <i class="bi bi-circle"></i><span>Size Master</span>
+            </a>
+            <a routerLink="product">
+              <i class="bi bi-circle"></i><span>Manage Product</span>
+            </a> -->
+            <a routerLink="head">
+              <i class="bi bi-circle"></i><span> Head Master</span>
+            </a>
+            <a routerLink="supplier">
+              <i class="bi bi-circle"></i><span>Manage Supplier</span>
+            </a>
+            <a routerLink="employee">
+              <i class="bi bi-circle"></i><span>Manage Employee</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#product" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Product</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="product" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a routerLink="unit">
+              <i class="bi bi-circle"></i><span>Manage Unit</span>
+            </a>
+            <a routerLink="category">
+              <i class="bi bi-circle"></i><span>Manage Category</span>
+            </a>
+            <a routerLink="size">
+              <i class="bi bi-circle"></i><span>Manage Size</span>
+            </a>
+            <a routerLink="new-product">
+              <i class="bi bi-circle"></i><span>New Product</span>
+            </a>
+            <a routerLink="product">
+              <i class="bi bi-circle"></i><span>List Product</span>
+            </a>
+            <a routerLink="product-stock-list">
+              <i class="bi bi-circle"></i><span>Stock Detail</span>
+            </a>
+            <a routerLink="stock-history">
+              <i class="bi bi-circle"></i><span>Stock History</span>
+            </a>
+            <a routerLink="bar-code-print">
+              <i class="bi bi-circle"></i><span>Barcode Print</span>
+            </a>
+            <a routerLink="barcode-printby-invoice">
+              <i class="bi bi-circle"></i><span>Barcode Print By Invoice</span>
+            </a>
+            <a routerLink="product-barcode">
+              <i class="bi bi-circle"></i><span>Product Barcode</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#purchase" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Purchase</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="purchase" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a routerLink="purchase">
+              <i class="bi bi-circle"></i><span>New Purchase</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="purchase-list">
+              <i class="bi bi-circle"></i><span>Purchase List</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="goods-return">
+              <i class="bi bi-circle"></i><span>Goods Return</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="gr-list">
+              <i class="bi bi-circle"></i><span>Goods Return List</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="print-goods-return">
+              <i class="bi bi-circle"></i><span>Goods Return Data</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="gr-data-report">
+              <i class="bi bi-circle"></i><span>Goods Return Data Report</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#transfer" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Transfer Stock</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="transfer" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a routerLink="transfer-product-to-sv">
+              <i class="bi bi-circle"></i><span>Transfer To SV</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="transfer-sv-list">
+              <i class="bi bi-circle"></i><span>Transfer SV List</span>
+            </a>
+          </li>
+          
+          <li>
+            <a routerLink="transfer-svdetail">
+              <i class="bi bi-circle"></i><span>Transfer SV Detail</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="transfer-product-to-st">
+              <i class="bi bi-circle"></i><span>Transfer To ST</span>
+            </a>
+          </li>
+        </ul>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#sell" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Sell</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="sell" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <!-- <li>
+            <a routerLink="merge-sellproduct">
+              <i class="bi bi-circle"></i><span>Sell</span>
+            </a>
+          </li> -->
+          <li>
+            <a routerLink="sell">
+              <i class="bi bi-circle"></i><span>Sell</span>
+            </a>
+          </li>
+          
+          <li>
+            <a routerLink="sell-list">
+              <i class="bi bi-circle"></i><span>Sell List</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="return-sell-product">
+              <i class="bi bi-circle"></i><span>Return Product</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#directsell" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Direct Sell</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="directsell" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a routerLink="direct-sell">
+              <i class="bi bi-circle"></i><span>Direct Sell</span>
+            </a>
+          </li>
+        
+          <li>
+            <a routerLink="direct-sell-list">
+              <i class="bi bi-circle"></i><span>Direct Sell List</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="direct-sell-return">
+              <i class="bi bi-circle"></i><span>Direct Sell Return</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="direct-sell-return-detail">
+              <i class="bi bi-circle"></i><span>Direct Sell Return Detail</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="daily-direct-sell-report">
+              <i class="bi bi-circle"></i><span>Daily Direct Sell Report</span>
+            </a>
+          </li>
+
+        </ul>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#sellreport" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Sell Report</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="sellreport" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a routerLink="dailysell-list">
+              <i class="bi bi-circle"></i><span>Daily Sell List</span>
+            </a>
+          </li>
+          
+          <li>
+            <a routerLink="sell-return-list">
+              <i class="bi bi-circle"></i><span>Sell Return Details</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="sell-daybook">
+              <i class="bi bi-circle"></i><span>Sell Day Book</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="sell-list-by-customer">
+              <i class="bi bi-circle"></i><span>Sell Report By Customer</span>
+            </a>
+          </li>
+        
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#gstreport" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>GST Report</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="gstreport" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a routerLink="sell-gst-report">
+              <i class="bi bi-circle"></i><span>Sell GST Report</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="return-gst-report">
+              <i class="bi bi-circle"></i><span>Return GST Report</span>
+            </a>
+          </li>
+
+          <!-- <li>
+            <a routerLink="direct-sell-gst-report">
+              <i class="bi bi-circle"></i><span>Direct Sell GST Report</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="direct-return-gst-report">
+              <i class="bi bi-circle"></i><span>Direct Return GST Report</span>
+            </a>
+          </li> -->
+
+          <li>
+            <a routerLink="merge-sell-list">
+              <i class="bi bi-circle"></i><span>Complete Sell list</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="merge-return-list">
+              <i class="bi bi-circle"></i><span>Complete Return list</span>
+            </a>
+          </li>
+        
+        </ul>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#supplier" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Supplier Report</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="supplier" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          
+          <li>
+            <a routerLink="supplier-payment">
+              <i class="bi bi-circle"></i><span>Supplier Payment</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="supplier-payment-detail">
+              <i class="bi bi-circle"></i><span>Supplier Payment Details</span>
+            </a>
+          </li>
+          
+          <li>
+            <a routerLink="supplier-payment-history">
+              <i class="bi bi-circle"></i><span>Supplier Payment History</span>
+            </a>
+          </li>
+        
+        </ul>
+      </li> -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" data-bs-target="#customer" data-bs-toggle="collapse">
+          <i class="bi bi-menu-button-wide"></i><span>Customer</span><i class="bi bi-chevron-down ms-auto"></i>
+        </a>
+        <ul id="customer" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+          <li>
+            <a routerLink="customer-list">
+              <i class="bi bi-circle"></i><span>Customer List</span>
+            </a>
+          </li>
+          
+        </ul>
+      </li>
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <router-outlet></router-outlet>
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+          &copy; Copyright <strong><span>DARZI CUSTOM TAILORING</span></strong>. All Rights Reserved. &copy; Developed By: <strong><span>Winnexcode IT Pvt. Ltd.</span></strong>.
+        </div>
+        <div class="credits">
+          <!-- All the links in the footer should remain intact. -->
+          <!-- You can delete the links only if you purchased the pro version. -->
+          <!-- Licensing information: https://bootstrapmade.com/license/ -->
+          <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+          <!-- Designed by <a >WebAikon</a> -->
+        </div>
+      </footer><!-- End Footer -->
+    
+      <a class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

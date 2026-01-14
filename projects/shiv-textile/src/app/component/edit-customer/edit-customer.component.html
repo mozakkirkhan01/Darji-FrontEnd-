@@ -1,0 +1,86 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<section class="section">
+    <div class="row">
+        <div class="col-12">
+            <div class="card recent-sales overflow-auto">
+                <div class="card-body">
+                    <h5 class="card-title">New Customer
+                        <a style="float: right;font-size: 14px;" routerLink="/admin/Customer">List Customer </a>
+                    </h5>
+                    <form #myForm="ngForm">
+                        <div class="row">
+                            <div class="col-lg-3 form-group">
+                                <label class="form-label">Customer Name <span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter Customer Name" #CustomerName="ngModel"
+                                    [(ngModel)]="Customer.CustomerName" name="CustomerName" class="form-control"
+                                    [ngClass]="{'is-invalid':submitted && CustomerName.invalid}" required autofocus>
+    
+                                <div *ngIf="CustomerName.invalid && (CustomerName.dirty || CustomerName.touched || submitted)"
+                                    class="text-danger">
+                                    <div *ngIf="CustomerName.errors?.['required']">
+                                        Customer Name is required.
+                                    </div>
+                                </div>
+                            </div> 
+                             <div class="col-sm-4 form-group">
+                                <label class="form-label">GST No</label>
+                                <input type="text" placeholder="Enter GST No" #GSTNo="ngModel"
+                                    [(ngModel)]="Customer.GSTNo" name="GSTNo" class="form-control">
+    
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label class="form-label">State Code</label>
+                                <input type="text" placeholder="Enter State Code" #StateCode="ngModel"
+                                    [(ngModel)]="Customer.StateCode" name="StateCode" class="form-control">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label class="form-label">Mobile No</label>
+                                <input type="number" placeholder="Enter Mobile No" #MobileNo="ngModel"
+                                    [(ngModel)]="Customer.MobileNo" name="MobileNo" class="form-control"
+                                    [ngClass]="{'is-invalid':submitted && MobileNo.invalid}" required autofocus>
+    
+                                <div *ngIf="MobileNo.invalid && (MobileNo.dirty || MobileNo.touched || submitted)"
+                                    class="text-danger">
+                                    <div *ngIf="MobileNo.errors?.['required']">
+                                        Mobile No is required.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label class="form-label">Email</label>
+                                <input type="text" placeholder="Enter Email" #Email="ngModel"
+                                    [(ngModel)]="Customer.Email" name="Email" class="form-control">
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label class="form-label">Full Address</label>
+                                <textarea placeholder="Enter Full Address" #FullAddress="ngModel"
+                                    [(ngModel)]="Customer.FullAddress" name="FullAddress" class="form-control"></textarea>
+                            </div>
+                            <div class="col-lg-3 form-group">
+                                <label class="form-label">Status <span class="text-danger">*</span></label>
+                                <select class="form-select" #Status="ngModel" [(ngModel)]="Customer.Status" name="Status"
+                                    [ngClass]="{'is-invalid':submitted && Status.invalid}" required autofocus>
+                                    <option value="">--Select Status--</option>
+                                    <option [value]="model.Key" *ngFor="let model of StatusList">
+                                        {{model.Value}}</option>
+                                </select>
+                                <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                    class="text-danger">
+                                    <div *ngIf="Status.errors?.['required']">
+                                        Status is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="button" class="btn btn-primary" (click)="saveCustomer(myForm)">Sumbit</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+

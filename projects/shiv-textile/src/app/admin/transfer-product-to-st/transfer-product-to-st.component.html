@@ -1,0 +1,193 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main" (keypress)="submit($event,myForm,formSell)">
+    <div class="pagetitle">
+        <h1>Transfer To Shiv Textile</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Product</li>
+                <li class="breadcrumb-item active">Transfer To Shiv Textile</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Transfer To Shiv Textile
+                            <a style="float: right;font-size: 14px;" routerLink="/admin/product">List Product
+                            </a>
+                        </h5>
+                        <form #myForm="ngForm" #myFormElement>
+                            <div class="row">
+
+                                <div class="col-lg-3 form-group">
+                                    <label class="form-label">Transfer Date <span class="text-danger">*</span></label>
+                                    <input type="date" placeholder="Enter Transfer Date" #TransferDate="ngModel"
+                                        [(ngModel)]="Transfer.TransferDate" name="TransferDate" class="form-control"
+                                        [ngClass]="{'is-invalid':submitted && TransferDate.invalid}" required autofocus>
+
+                                    <div *ngIf="TransferDate.invalid && (TransferDate.dirty || TransferDate.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="TransferDate.errors?.['required']">
+                                            Transfer Date is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 form-group">
+                                    <label class="form-label">Remarks</label>
+                                    <textarea type="text" placeholder="Enter Reasons" #Reasons="ngModel"
+                                        [(ngModel)]="Transfer.Reasons" name="Reasons" class="form-control"></textarea>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action" aria-current="true">
+                                <form #formProduct="ngForm" #formProductElement>
+                                    <div class="row">
+                                        <div class="col-lg-4 form-group">
+                                            <label class="form-label">Product <span class="text-danger">*</span></label>
+
+                                            <ng-autocomplete id="productAutoComplete" [data]="ProductStockList"
+                                                [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
+                                                name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                                [notFoundTemplate]="productNotFoundTemplate"
+                                                #productAutoComplete="ngModel"
+                                                (inputChanged)="changeProductInput($event,formProduct)"
+                                                [(ngModel)]="TransferProduct.productAutoComplete" [isLoading]="dataLoading"
+                                                (inputCleared)="clearProductStock()"
+                                                (selected)='afterProductStockSelected($event)' [minQueryLength]="1"
+                                                required="required" [autofocus]="TransferProduct.SellProduct">
+                                            </ng-autocomplete>
+
+                                            <ng-template #productItemTemplate let-item>
+                                                <a [innerHTML]="item.SearchProduct"></a>
+                                            </ng-template>
+
+                                            <ng-template #productNotFoundTemplate let-notFound>
+                                                <div [innerHTML]="notFound">
+                                                </div>
+                                            </ng-template>
+                                            <div class="text-success" *ngIf="TransferProduct.ProductStockId">
+                                                <b>Avl. Qty.: {{TransferProduct.AvailableQuantity}}
+                                                    {{TransferProduct.UnitName}}</b>
+                                            </div>
+                                            <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="productAutoComplete.errors?.['required']">
+                                                    Product is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Qty. <span class="text-danger">*</span></label>
+                                            <input type="number" placeholder="Qty." #Quantity="ngModel"
+                                                (change)="changeSellingPrice(TransferProduct)" (keypress)="keyPress($event)"
+                                                min="0.1" [(ngModel)]="TransferProduct.Quantity" name="Quantity"
+                                                class="form-control"
+                                                [ngClass]="{'is-invalid':isProductSubmitted && Quantity.invalid}"
+                                                required autofocus>
+
+                                            <div *ngIf="Quantity.invalid && (Quantity.dirty || Quantity.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="Quantity.errors?.['required']">
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Unit </label>
+                                            <input type="text" disabled="disabled" [value]="TransferProduct.UnitName"
+                                                class="form-control">
+                                        </div>
+                                        
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Add</label>
+                                            <br>
+                                            <button class="btn btn-primary" name="addProduct"
+                                                (click)="addSellProduct(formProduct)">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </a>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="row">
+                                    <div class="col-lg-12 table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Product Code</th>
+                                                    <th>Product Name</th>
+                                                    <th>Category Name</th>
+                                                    <th>MRP</th>
+                                                    <th>Selling Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let model of TransferProductList; let i = index">
+                                                    <td>{{i+ 1}}</td>
+                                                    <td>{{model.StockCode}}</td>
+                                                    <td>{{model.ProductName}}</td>
+                                                    <td>{{model.CategoryName}}</td>
+                                                    <td>{{model.MRP}}</td>
+                                                    <td>
+                                                        {{model.SellingPrice}}
+                                                    </td>
+                                                    <td>
+                                                        {{model.Quantity}}
+                                                    </td>
+                                                    <td>{{model.UnitName}}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-danger"
+                                                            (click)="removeData(TransferProductList,i)"><i
+                                                                class="bi bi-trash-fill"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total Quantity</th>
+                                                    <th>{{TotalTransferProduct.TotalQuantity|number}}</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="list-group" style="margin-top: 10px;">
+                            <a class="list-group-item list-group-item-action">
+                                <form #formSell="ngForm">
+
+                                </form>
+                            </a>
+
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-primary"
+                            (click)="saveTransfertoSV(myForm,formSell)">Sumbit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>

@@ -1,0 +1,206 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Supplier Payment Detail</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Supplier Payment Detail</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Supplier Detail
+                            <a style="float: right;font-size: 14px;" routerLink="/admin/supplier">Detail Supplier 
+                            </a>
+                        </h5>
+                        <form #myForm="ngForm">
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Supplier <span class="text-danger">*</span></label>
+                                    <ng-autocomplete [data]="SupplierList" [searchKeyword]="'CompanyName'"
+                                        placeholder="Enter Supplier Detail" (selected)='afterSupplierSelected($event)'
+                                        name="supplierAutoComplete" [itemTemplate]="itemTemplate"
+                                        [notFoundTemplate]="notFoundTemplate" #SupplierAutoCompleter="ngModel"
+                                        [(ngModel)]="Purchase.SupplierAutoCompleter" [isLoading]="dataLoading"
+                                        (inputCleared)="clearSupplier()" [minQueryLength]="1">
+                                    </ng-autocomplete>
+
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.CompanyName"></a>
+                                    </ng-template>
+
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div>
+                                            <a class="new-link" routerLink="/admin/supplier">New Supplier</a>
+                                        </div>
+                                    </ng-template>
+                                    <div *ngIf="SupplierAutoCompleter.invalid && (SupplierAutoCompleter.dirty || SupplierAutoCompleter.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="SupplierAutoCompleter.errors?.['required']">
+                                            Supplier is required.
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- <div class="col-sm-3 form-group">
+                                    <label class="form-label">Supplier </label>
+                                    <input type="text" disabled="disabled" placeholder="Enter Supplier Name"
+                                        #SupplierName="ngModel" [(ngModel)]="Purchase.CompanyName" name="SupplierName"
+                                        class="form-control">
+                                </div> -->
+
+                                <!-- <div class="col-sm-3 form-group">
+                                    <label class="form-label">Party Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" #PartyType="ngModel" [(ngModel)]="Purchase.PartyType"
+                                        name="PartyType" [ngClass]="{'is-invalid':submitted && PartyType.invalid}"
+                                        required autofocus>
+                                        <option value="">--Select Party Type--</option>
+                                        <option [value]="model.Key" *ngFor="let model of PartyTypeList">
+                                            {{model.Value}}</option>
+                                    </select>
+                                    <div *ngIf="PartyType.invalid && (PartyType.dirty || PartyType.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="PartyType.errors?.['required']">
+                                            Party Type is required.
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" 
+                                    [value]="SelectedSupplier.CompanyName" class="form-control">
+
+                                </div>
+
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Contact Person Name <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" 
+                                    [value]="SelectedSupplier.ContactPersonName" class="form-control">
+
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label class="form-label">Mobile No. <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" 
+                                    [value]="SelectedSupplier.MobileNo" class="form-control">
+
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">GST No. <span class="text-danger">*</span></label>
+                                    <input type="text" disabled="disabled" 
+                                    [value]="SelectedSupplier.GSTNo" class="form-control">
+
+                                </div>
+                            </div>
+                        </form>
+                        <div class="list-group" *ngIf="!myForm.invalid">
+                            <a class="list-group-item list-group-item-action active" aria-current="true">
+                                Payment Details
+                            </a>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="row">
+                                    <div class="dataTable-top">
+                                        <div class="dataTable-dropdown">
+                                            <select class="dataTable-selector form-select form-select-sm"
+                                                [(ngModel)]="itemPerPage">
+                                                <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                            </select>
+                                            entries per page
+                                        </div>
+                                        <div class="dataTable-search"><input
+                                                class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                                placeholder="Search..." type="text"></div>
+                                    </div>
+                                    <div class="col-lg-12 table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Particulars</th>
+                                                    <th>Invoice No.</th>
+                                                    <th>Invoice Date</th>
+                                                    <th>Payment Date</th>
+                                                    <th>Total Bill Amount</th>
+                                                    <th>Paid Amount</th>
+                                                    <th>Payment Mode</th>
+                                                    <th>Transaction Details</th>
+                                                    <th>Remarks</th>
+                                                    <th>Payment Status</th>
+                                                    <!-- <th>Delete</th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let model of SupplierPaymentHistory|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                                    <td>{{i+ 1}}</td>
+                                                    <td>{{model.Particular}}</td>
+                                                    <td>{{model.InvoiceNo}}</td>
+                                                    <td>{{model.InvoiceDate|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{model.PaymentDate|date:'dd/MM/yyyy'}}</td>
+                                                    <td>{{model.TotalAmount}}</td>
+                                                    <td>{{model.PaidAmount}}</td>
+                                                    <td>{{model.PaymentMode}}</td>
+                                                    <td>{{model.TransactionNo}}</td>
+                                                    <td>{{model.Remarks}}</td>
+                                                    <td><span [ngClass]="model.PaymentStatus=='Paid'?'text-success':'text-danger'">{{model.PaymentStatus}}</span></td>
+                                                    <td>
+                                                        <!-- <td>
+                                                        <button class="btn btn-sm btn-danger"><i
+                                                                class="bi bi-trash-fill"></i></button>
+                                                    </td> -->
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>{{paymentTotal.grandTotalAmount|number}}</th>
+                                                    <th>{{paymentTotal.grandPaidAmount|number}}</th>
+                                                    <th>{{paymentTotal.FinalAmount|number}}</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                    <div class="dataTable-bottom">
+                                        <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                            class="my-pagination"></pagination-controls>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                        </div>
+                        
+                        
+
+                    </div>
+                    <!-- <div class="card-footer text-center" *ngIf="!myForm.invalid">
+                        <button type="button" class="btn btn-primary"
+                            >Sumbit</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_product" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <!-- <app-edit-product></app-edit-product> -->
+        </div>
+    </div>
+</div>

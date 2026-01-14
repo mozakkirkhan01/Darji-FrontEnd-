@@ -1,0 +1,268 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Sell GST Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Sell GST Report</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Sell GST Report
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
+                        </h5>
+
+                        <div class="row">
+                                <div class="row form-group col-sm-12">
+                                    <div class="col-sm-3">
+                                        <label>From Date</label>
+                                        <input type="date" [(ngModel)]="dailysell.FromDate" class="form-control">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>To Date</label>
+                                        <input type="date" [(ngModel)]="dailysell.ToDate" class="form-control">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>Search By<span class="text-danger">*</span> </label>
+                                        <select class="form-select" #SearchType="ngModel" (change)="changeHsn()"
+                                             [(ngModel)]="dailysell.SearchType"
+                                            name="GSTPercentage" >
+                                            <option value="">--Select--</option>
+                                            <option value="1">HSN Wise</option>
+                                            <option value="2">GST Wise</option>
+                                            
+                                        </select>
+                                        <!-- <div *ngIf="SearchType.invalid && (SearchType.dirty || SearchType.touched)"
+                                            class="text-danger">
+                                            <div *ngIf="SearchType.errors?.['required']">
+                                                This field is required.
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <!-- <div class="col-sm-3">
+                                    <label>Search By GST % </label>
+                                            <select class="form-select" #GSTPercentage="ngModel"
+                                                (change)="getGstSellList(dailysell)"
+                                                [(ngModel)]="dailysell.GSTPercentage" name="GSTPercentage">
+                                                <option [value]="model.GSTValue" *ngFor="let model of GSTList">
+                                                    {{model.GSTPercent}}</option>
+                                            </select>
+                                </div> -->
+                                    <div class="col-sm-3" *ngIf="dailysell.SearchType == 1">
+                                        <label>Search By HSNCode</label>
+                                        <ng-autocomplete [data]="HsnList" [searchKeyword]="'SearchProduct'"
+                                            placeholder="Enter Product Name/HSN Code" (selected)='getHsnCode($event)'
+                                            name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                            [notFoundTemplate]="productNotFoundTemplate" #productAutoComplete="ngModel"
+                                            [(ngModel)]="HsnSell.productAutoComplete" [isLoading]="dataLoading"
+                                            (inputCleared)="clearProduct()" [minQueryLength]="1" required="required"
+                                            [autofocus]="HsnSell.HsnCode">
+                                        </ng-autocomplete>
+
+                                        <ng-template #productItemTemplate let-item>
+                                            <a [innerHTML]="item.SearchProduct"></a>
+                                        </ng-template>
+
+                                        <ng-template #productNotFoundTemplate let-notFound>
+                                            <div>
+                                                <a class="new-link" data-bs-toggle="modal"
+                                                    data-bs-target="#modal_product">New Product</a>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <label>Search</label>
+                                        <button (click)="getGstSellList()" class="btn btn-success"><i
+                                                class="bi bi-search"></i></button>
+                                    </div>
+                                </div>
+
+                                <div class="dataTable-top">
+                                    <div class="dataTable-dropdown">
+                                        <select class="dataTable-selector form-select form-select-sm"
+                                            [(ngModel)]="itemPerPage">
+                                            <option *ngFor="let option of pageSize" [value]="option">{{option}}
+                                            </option>
+                                        </select>
+                                        entries per page
+                                    </div>
+                                    <div class="dataTable-search"><input
+                                            class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                            placeholder="Search..." type="text"></div>
+                                </div>
+
+
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover" #table1>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <!-- <th>Invoice</th> -->
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceDate')">Invoice Date</th>
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceNo')">Invoice</th>
+                                            <th style="cursor: pointer;" (click)="sort('StockCode')">Stock Code</th>
+                                            <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                            <th>Size</th>
+                                            <th>HSNCode</th>
+                                            <th>Selling Price</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Discount (%)</th>
+                                            <th>Discount (₹)</th>
+                                            <th>Taxable Amount</th>
+                                            <th>GST (%)</th>
+                                            <th>CGST</th>
+                                            <th>SGST</th>
+                                            <th>Gross Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of GstSellList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.InvoiceDate|date:'dd-MM-yyyy'}}</td>
+                                            <td><a (click)="getNewBillPrint(model)">{{model.InvoiceNo}}</a></td>
+                                            <td>{{model.StockCode}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.SizeName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.SellingPrice}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                            <td>{{model.DiscountPercentage}}%</td>
+                                            <td>{{model.DiscountAmount}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}%</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>TOTAL</th>
+                                            <th>{{SellTotal.DiscountAmount|number}}</th>
+                                            <th>{{SellTotal.TaxableAmount|number}}</th>
+                                            <th></th>
+                                            <th>{{SellTotal.CGSTAmount|number}}</th>
+                                            <th>{{SellTotal.SGSTAmount|number}}</th>
+                                            <th>{{SellTotal.GrossAmount|number}}</th>
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-primary" (click)="exportToExcel()">Export To
+                                    Excel</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sell Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Products
+                    </a>
+                    <a class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Stock Code</th>
+                                            <th>Product Name</th>
+                                            <th>HSN Code</th>
+                                            <th>MRP</th>
+                                            <th>Selling Price</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Discount (%)</th>
+                                            <th>Discount (₹)</th>
+                                            <th>Taxable Amount</th>
+                                            <th>GST (%)</th>
+                                            <th>CGST</th>
+                                            <th>SGST</th>
+                                            <th>IGST</th>
+                                            <th>Gross Amount</th>
+                                            <th>Sell Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let model of SellProductList; let i = index">
+                                            <td>{{i+ 1}}</td>
+                                            <td>{{model.StockCode}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.MRP}}</td>
+                                            <td>{{model.SellingPrice}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                            <td>{{model.DiscountPercentage}}</td>
+                                            <td>{{model.DiscountAmount}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.IGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+                                            <td><span
+                                                    [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">{{model.SellingStatus==1?"Sold":"Return"}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Customer Wise Sell List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Reports</li>
+                <li class="breadcrumb-item active">Customer Wise Sell List</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Customer Wise Sell Report
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
+                        </h5>
+
+                        <!-- Search Filters -->
+                        <div class="row mb-3">
+                            <div class="col-lg-3">
+                                <label class="form-label">From Date</label>
+                                <input type="date" class="form-control" [(ngModel)]="sell.FromDate" name="FromDate">
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">To Date</label>
+                                <input type="date" class="form-control" [(ngModel)]="sell.ToDate" name="ToDate">
+                            </div>
+                            <div class="col-lg-5">
+                                <label class="form-label">Select Customer <span class="text-danger">*</span></label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control flex-grow-1"
+                                        placeholder="Search by Customer Name, Mobile No, or GST No"
+                                        [(ngModel)]="customerSearchTerm" name="customerSearchTerm"
+                                        (ngModelChange)="filterCustomerList($event)" [matAutocomplete]="autoCustomer"
+                                        required>
+                                    <button type="button" *ngIf="customerSearchTerm"
+                                        class="btn btn-outline-secondary ms-2" (click)="clearCustomer()">
+                                        <i class="ri-close-line"></i>
+                                    </button>
+                                    <mat-autocomplete #autoCustomer="matAutocomplete"
+                                        (optionSelected)="onCustomerSelected($event)">
+                                        <mat-option *ngFor="let customer of CustomerList" [value]="customer.CustomerId">
+                                            {{ customer.DisplayText }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+                                <div *ngIf="loadingCustomers" class="text-muted mt-1">
+                                    <i class="spinner-border spinner-border-sm me-1"></i>Loading customers...
+                                </div>
+                                <div *ngIf="CustomerList.length === 0 && !loadingCustomers && customerSearchTerm"
+                                    class="text-muted mt-1">
+                                    No customers found matching your search.
+                                </div>
+                            </div>
+                            <div class="col-lg-1 d-flex align-items-end">
+                                <button (click)="searchSellList()" class="btn btn-primary"
+                                    [disabled]="!sell.CustomerId">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Selected Customer Info -->
+                        <div *ngIf="SelectedCustomer.CustomerId" class="alert alert-info">
+                            <strong>Selected Customer:</strong> {{ SelectedCustomer.CustomerName }}
+                            ({{ SelectedCustomer.MobileNo }})
+                            <span *ngIf="SelectedCustomer.GSTNo"> - GST: {{ SelectedCustomer.GSTNo }}</span>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div *ngIf="SellList.length > 0">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}}</option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search">
+                                    <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search in results..." type="text">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Invoice</th>
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceDate')">
+                                                Invoice Date
+                                                <i class="bi"
+                                                    [ngClass]="sortKey === 'InvoiceDate' ? (reverse ? 'bi-sort-down' : 'bi-sort-up') : 'bi-sort'"></i>
+                                            </th>
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceNo')">
+                                                Invoice No
+                                                <i class="bi"
+                                                    [ngClass]="sortKey === 'InvoiceNo' ? (reverse ? 'bi-sort-down' : 'bi-sort-up') : 'bi-sort'"></i>
+                                            </th>
+                                            <th style="cursor: pointer;" (click)="sort('MobileNo')">Mobile No</th>
+                                            <th style="cursor: pointer;" (click)="sort('CustomerName')">Customer Name</th>
+                                            <th style="cursor: pointer;" (click)="sort('TaxableAmount')">
+                                                Taxable Amount
+                                                <i class="bi"
+                                                    [ngClass]="sortKey === 'TaxableAmount' ? (reverse ? 'bi-sort-down' : 'bi-sort-up') : 'bi-sort'"></i>
+                                            </th>
+                                            <th style="cursor: pointer;" (click)="sort('CGSTAmount')">CGST</th>
+                                            <th style="cursor: pointer;" (click)="sort('SGSTAmount')">SGST</th>
+                                            <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST</th>
+                                            <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('PaidAmount')">Paid Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('DuesAmount')">Dues Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('CreatedName')">Created By</th>
+                                            <th style="cursor: pointer;" (click)="sort('SellsName')">Sales Person</th>
+                                            <th>Status</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of SellList | filter:Search | orderBy:sortKey:reverse | paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                            <td>{{(itemPerPage * (p - 1)) + i + 1}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" (click)="printInvoice(model)"
+                                                    title="Print Invoice">
+                                                    <i class="bi bi-printer"></i>
+                                                </button>
+                                            </td>
+                                            <td>{{model.InvoiceDate | date:'dd-MM-yyyy'}}</td>
+                                            <td>{{model.InvoiceNo}}</td>
+                                            <td>{{model.MobileNo}}</td>
+                                            <td>{{model.CustomerName}}</td>
+                                            <td class="text-end">₹{{model.TaxableAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.CGSTAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.SGSTAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.IGSTAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.NetAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.PaidAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">₹{{model.DuesAmount | number:'1.2-2'}}</td>
+                                            <td>{{model.CreatedName}}</td>
+                                            <td>{{model.SellsName}}</td>
+                                            <td>
+                                                <span
+                                                    [ngClass]="model.OldSellId == model.SellId ? 'badge bg-danger' : model.NewSellId == model.SellId ? 'badge bg-primary' : 'badge bg-success'">
+                                                    {{model.OldSellId == model.SellId ? 'Return' : model.NewSellId ==
+                                                    model.SellId ? 'New' : 'Normal'}}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot class="table-secondary">
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th colspan="4" class="text-end">TOTAL:</th>
+                                            <th class="text-end">₹{{SellTotal.TaxableAmount | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.CGSTAmount | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.SGSTAmount | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.IGSTAmount | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.NetAmount | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.GrandTotal | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{SellTotal.DuesAmount | number:'1.2-2'}}</th>
+                                            <th colspan="4"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="dataTable-bottom">
+                                <div class="dataTable-info">
+                                    Showing {{(itemPerPage * (p - 1)) + 1}} to {{Math.min(itemPerPage * p,
+                                    SellList.length)}}
+                                    of {{SellList.length}} entries
+                                </div>
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination">
+                                </pagination-controls>
+                            </div>
+                        </div>
+
+                        <!-- Debug Information (Remove in production) -->
+                        <div *ngIf="false" class="alert alert-secondary">
+                            <strong>Debug Info:</strong><br>
+                            All Customers: {{AllCustomerList.length}}<br>
+                            Filtered Customers: {{CustomerList.length}}<br>
+                            Selected Customer ID: {{sell.CustomerId}}<br>
+                            Search Term: {{customerSearchTerm}}<br>
+                            Sell List Count: {{SellList.length}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+

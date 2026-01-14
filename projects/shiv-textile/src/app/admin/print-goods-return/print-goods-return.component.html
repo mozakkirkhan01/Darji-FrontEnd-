@@ -1,0 +1,205 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Return Goods</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Purchase</li>
+                <li class="breadcrumb-item active">Return Goods</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Return Goods</h5>
+                        <div class="row">
+
+                            <div class="col-sm-3">
+                                <label>From Date</label>
+                                <input type="date" [(ngModel)]="SellProduct.FromDate" class="form-control">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>To Date</label>
+                                <input type="date" [(ngModel)]="SellProduct.ToDate" class="form-control">
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label>Supplier <span class="text-danger">*</span></label>
+                                <ng-autocomplete id="productAutoComplete" [data]="SupplierList"
+                                    [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
+                                    name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                    [notFoundTemplate]="productNotFoundTemplate" #productAutoComplete="ngModel"
+                                    [(ngModel)]="SellProduct.productAutoComplete" [isLoading]="dataLoading"
+                                    (inputCleared)="clearProductStock()" (selected)='getPrintGoodsReturnList($event)'
+                                    [minQueryLength]="1" required="required" [autofocus]="SellProduct.SellProduct">
+                                </ng-autocomplete>
+
+                                <ng-template #productItemTemplate let-item>
+                                    <a [innerHTML]="item.SearchProduct"></a>
+                                </ng-template>
+
+                                <ng-template #productNotFoundTemplate let-notFound>
+                                    <div [innerHTML]="notFound">
+                                    </div>
+                                </ng-template>
+                                <div class="text-success" *ngIf="SellProduct.ProductStockId">
+                                    <b>Avl. Qty.: {{SellProduct.AvailableQuantity}}
+                                        {{SellProduct.UnitName}}</b>
+                                </div>
+                                <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched)"
+                                    class="text-danger">
+                                    <div *ngIf="productAutoComplete.errors?.['required']">
+                                        Product is required.
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+
+                            </div>
+                            <!-- <div class="col-lg-12">
+                                <b class="text-primary" style="float: right;">Total Available Stock :
+                                    {{ProductTotal.Quantity|number}}</b>
+                            </div> -->
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th>select</th>
+                                        <th style="cursor: pointer;" (click)="sort('GoodsReturnCode')">GR Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('GRDate')">GR Date</th>
+                                        <th style="cursor: pointer;" (click)="sort('CategoryName')">Category</th>
+                                        <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('Quantity')">Quantity</th>
+                                        <!-- <th style="cursor: pointer;" (click)="sort('SizeName')">Size</th> -->
+                                        <!-- <th style="cursor: pointer;" (click)="sort('HSNCode')">HSN Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('UnitName')">Unit</th> -->
+                                        <th style="cursor: pointer;" (click)="sort('Rate')">Rate</th>
+                                        <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Disc.(%)</th>
+                                        <th style="cursor: pointer;" (click)="sort('CostPrice')">Cost Price</th>
+                                        <th style="cursor: pointer;" (click)="sort('TaxableAmount')">Taxable Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GSTPercentage')">GST(%)</th>
+                                        <th style="cursor: pointer;" (click)="sort('CGSTAmount')">CGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('SGSTAmount')">SGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GrossAmount')">Gross Amount</th>
+
+
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of PrintGoodsReturnList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td><button (click)="addSelectedItem(model)" class="btn btn-primary"><i
+                                                        class="bx bxs-hand-right"></i></button></td>
+                                            <td>{{model.GoodsReturnCode}}</td>
+                                            <td>{{model.GRDate|date:"dd/MM/yyyy"}}</td>
+                                            <td>{{model.CategoryName}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <!-- <td>{{model.SizeName}}</td> -->
+                                            <!-- <td>{{model.HSNCode}}</td>
+                                            <td>{{model.UnitName}}</td> -->
+                                            <td>{{model.Rate}}</td>
+                                            <td>{{model.DiscountPercentage}}%</td>
+                                            <td>{{model.CostPrice}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}%</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.IGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-lg-12 table-responsive" *ngIf="AddPrintGoodsReturnList.length>0">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <th>#</th>
+                                    <!-- <th>select</th> -->
+                                    <th style="cursor: pointer;" (click)="sort('GoodsReturnCode')">GR Code</th>
+                                    <th style="cursor: pointer;" (click)="sort('GRDate')">GR Date</th>
+                                    <th style="cursor: pointer;" (click)="sort('CategoryName')">Category</th>
+                                    <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                    <th style="cursor: pointer;" (click)="sort('Quantity')">Quantity</th>
+                                    <!-- <th style="cursor: pointer;" (click)="sort('SizeName')">Size</th> -->
+                                    <!-- <th style="cursor: pointer;" (click)="sort('HSNCode')">HSN Code</th>
+                                    <th style="cursor: pointer;" (click)="sort('UnitName')">Unit</th> -->
+                                    <th style="cursor: pointer;" (click)="sort('Rate')">Rate</th>
+                                    <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Disc.(%)</th>
+                                    <th style="cursor: pointer;" (click)="sort('CostPrice')">Cost Price</th>
+                                    <th style="cursor: pointer;" (click)="sort('TaxableAmount')">Taxable Amount</th>
+                                    <th style="cursor: pointer;" (click)="sort('GSTPercentage')">GST(%)</th>
+                                    <th style="cursor: pointer;" (click)="sort('CGSTAmount')">CGST Amount</th>
+                                    <th style="cursor: pointer;" (click)="sort('SGSTAmount')">SGST Amount</th>
+                                    <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST Amount</th>
+                                    <th style="cursor: pointer;" (click)="sort('GrossAmount')">Gross Amount</th>
+
+
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let model of AddPrintGoodsReturnList; let i = index">
+                                        <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                        <td>{{model.GoodsReturnCode}}</td>
+                                        <td>{{model.GRDate|date:"dd/MM/yyyy"}}</td>
+                                        <td>{{model.CategoryName}}</td>
+                                        <td>{{model.ProductName}}</td>
+                                        <td>{{model.Quantity}}</td>
+                                        <!-- <td>{{model.SizeName}}</td> -->
+                                        <!-- <td>{{model.HSNCode}}</td>
+                                        <td>{{model.UnitName}}</td> -->
+                                        <td>{{model.Rate}}</td>
+                                        <td>{{model.DiscountPercentage}}%</td>
+                                        <td>{{model.CostPrice}}</td>
+                                        <td>{{model.TaxableAmount}}</td>
+                                        <td>{{model.GSTPercentage}}%</td>
+                                        <td>{{model.CGSTAmount}}</td>
+                                        <td>{{model.SGSTAmount}}</td>
+                                        <td>{{model.IGSTAmount}}</td>
+                                        <td>{{model.GrossAmount}}</td>
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button class="btn btn-sm btn-primary" (click)="saveGRBill()">Genereate GR </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>

@@ -1,0 +1,300 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Merge Sell Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Merge Sell Report</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Merge Sell Report
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
+                        </h5>
+
+                        <div class="row">
+                            <div class="row form-group col-sm-12">
+                                <div class="col-sm-3">
+                                    <label>From Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.FromDate" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>To Date</label>
+                                    <input type="date" [(ngModel)]="dailysell.ToDate" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>Search By Employee</label>
+                                    <ng-autocomplete [data]="EmployeeList" [searchKeyword]="'SearchEmployee'"
+                                        placeholder="Enter Employee Name" (selected)='getEmployeeId($event)'
+                                        name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                        [notFoundTemplate]="productNotFoundTemplate" #productAutoComplete="ngModel"
+                                        [(ngModel)]="SalesMan.productAutoComplete" [isLoading]="dataLoading"
+                                        (inputCleared)="clearEmployee()" [minQueryLength]="1" required="required"
+                                        [autofocus]="SalesMan.SalesMan">
+                                    </ng-autocomplete>
+
+                                    <ng-template #productItemTemplate let-item>
+                                        <a [innerHTML]="item.SearchEmployee"></a>
+                                    </ng-template>
+
+                                    <ng-template #productNotFoundTemplate let-notFound>
+                                    </ng-template>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label>Select Shop <span class="text-danger">*</span></label>
+                                    <select class="form-select" #ShopId="ngModel" [(ngModel)]="SalesMan.ShopId"
+                                        name="ShopId" (change)="selectShopAddress()">
+                                        <option value="">--Select Shop--</option>
+                                        <option [value]="model.ShopId" *ngFor="let model of ShopList">
+                                            {{model.ShopName}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 form-group">
+                                    <label class="form-label">Address <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Enter Address" #Address="ngModel"
+                                        disabled="disabled" [(ngModel)]="SalesMan.Address" name="Address"
+                                        class="form-control">
+                                </div>
+                                
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-4" style="margin-top: 20px;">
+                                    <button (click)="getMergeSellList()" class="btn btn-success">Sell</button>
+                                    &nbsp;
+                                    <button (click)="getCompleteSellsManReport()"
+                                        class="btn btn-primary">SalesMan</button>
+                                    &nbsp;
+                                    <button (click)="getCompleteBillerReport()"
+                                        class="btn btn-warning">Biller</button>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                            </div>
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}}
+                                        </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+
+
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover" #table1>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <!-- <th>Invoice</th> -->
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceDate')">Invoice Date</th>
+                                            <th style="cursor: pointer;" (click)="sort('InvoiceNo')">Invoice</th>
+                                            <th style="cursor: pointer;" (click)="sort('StockCode')">Stock Code</th>
+                                            <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                            <th style="cursor: pointer;" (click)="sort('CategoryName')">Category</th>
+                                            <th>Size</th>
+                                            <th>HSNCode</th>
+                                            <th>Selling Price</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Discount (%)</th>
+                                            <th>Discount (₹)</th>
+                                            <th>Taxable Amount</th>
+                                            <th>GST (%)</th>
+                                            <th>CGST</th>
+                                            <th>SGST</th>
+                                            <th>Gross Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of MergeSellList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>{{model.InvoiceDate|date:'dd-MM-yyyy'}}</td>
+                                            <td><a (click)="getNewBillPrint(model)">{{model.InvoiceNo}}</a></td>
+                                            <td>{{model.StockCode}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.CategoryName}}</td>
+                                            <td>{{model.SizeName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.SellingPrice}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                            <td>{{model.DiscountPercentage}}%</td>
+                                            <td>{{model.DiscountAmount}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}%</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>TOTAL</th>
+                                            <th>{{SellTotal.DiscountAmount|number}}</th>
+                                            <th>{{SellTotal.TaxableAmount|number}}</th>
+                                            <th></th>
+                                            <th>{{SellTotal.CGSTAmount|number}}</th>
+                                            <th>{{SellTotal.SGSTAmount|number}}</th>
+                                            <th>{{SellTotal.GrossAmount|number}}</th>
+
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="button" class="btn btn-primary" (click)="exportToExcel()">Export To
+                                    Excel</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_Biller" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Biller Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Biller Details
+                    </a>
+                    <a class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-lg-12 table-responsive">
+                                    <table class="table table-bordered table-hover" #table3>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Biller</th>
+                                                <th>TotalSaleAmount</th>
+                                                <!-- <th>TotalSaleItem</th> -->
+                                                <th>TotalSales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let model of CompleteBillerReport; let i = index">
+                                                <td>{{i+ 1}}</td>
+                                                <td>{{model.SellsName}}</td>
+                                                <td>{{model.TotalSaleAmount}}</td>
+                                                <!-- <td>{{model.TotalSaleItem}}</td> -->
+                                                <td>{{model.TotalSales}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button type="button" class="btn btn-primary" (click)="exportToExcel2()">Export To
+                                        Excel</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal_Summary" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sell Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Summary Details
+                    </a>
+                    <a class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-lg-12 table-responsive">
+                                    <table class="table table-bordered table-hover" #table2>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>SalesMan</th>
+                                                <th>TotalSaleAmount</th>
+                                                <!-- <th>TotalSaleItem</th> -->
+                                                <th>TotalSales</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let model of CompleteSellsManReport; let i = index">
+                                                <td>{{i+ 1}}</td>
+                                                <td>{{model.SellsName}}</td>
+                                                <td>{{model.TotalSaleAmount}}</td>
+                                                <!-- <td>{{model.TotalSaleItem}}</td> -->
+                                                <td>{{model.TotalSales}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button type="button" class="btn btn-primary" (click)="exportToExcel1()">Export To
+                                        Excel</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

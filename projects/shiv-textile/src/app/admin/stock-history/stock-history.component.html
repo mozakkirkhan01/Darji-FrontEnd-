@@ -1,0 +1,159 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Stock Hisory</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Product</li>
+                <li class="breadcrumb-item active">Stock Hisory</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Stock Hisory</h5>
+                        <div class="row">
+
+                            <div class="col-lg-4 form-group">
+                                <!-- <label class="form-label">Product <span class="text-danger">*</span></label>
+                                <ng-autocomplete id="productAutoComplete" [data]="ProductStockList"
+                                    [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
+                                    name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                    [notFoundTemplate]="productNotFoundTemplate"
+                                    #productAutoComplete="ngModel"
+                                    [(ngModel)]="SellProduct.productAutoComplete" [isLoading]="dataLoading"
+                                    (inputCleared)="clearProductStock()"
+                                    (selected)='getProductStockHistoryList($event)' [minQueryLength]="1"
+                                    required="required" [autofocus]="SellProduct.SellProduct">
+                                </ng-autocomplete>
+
+                                <ng-template #productItemTemplate let-item>
+                                    <a [innerHTML]="item.SearchProduct"></a>
+                                </ng-template>
+
+                                <ng-template #productNotFoundTemplate let-notFound>
+                                    <div [innerHTML]="notFound">
+                                    </div>
+                                </ng-template>
+                                <div class="text-success" *ngIf="SellProduct.ProductStockId">
+                                    <b>Avl. Qty.: {{SellProduct.AvailableQuantity}}
+                                        {{SellProduct.UnitName}}</b>
+                                </div>
+                                <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched)"
+                                    class="text-danger">
+                                    <div *ngIf="productAutoComplete.errors?.['required']">
+                                        Product is required.
+                                    </div>
+                                </div> -->
+
+                                <label class="form-label">Select Product</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="text" class="form-control flex-grow-1"
+                                        placeholder="Search By Stock Code / Product Name"
+                                        [(ngModel)]="SellProduct.ProductName" name="ProductName"
+                                        (ngModelChange)="filterPatientList($event)" [matAutocomplete]="autoProduct"
+                                        required>
+                                    <a mat-icon-button matSuffix *ngIf="SellProduct.ProductName" color="primary"
+                                        (click)="clearPatient()" class="ms-2">
+                                        <mat-icon><i class="ri-close-circle-line"></i></mat-icon>
+                                    </a>
+                                    <mat-autocomplete #autoProduct="matAutocomplete"
+                                        (optionSelected)="afterPatientSelected($event)">
+                                        <mat-option *ngFor="let option of ProductStockList" [id]="option.ProductStockId"
+                                            [value]="option.ProductName">
+                                            {{ option.SearchProduct }}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+                            </div>
+
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+
+                            </div>
+                            <!-- <div class="col-lg-12">
+                                <b class="text-primary" style="float: right;">Total Available Stock :
+                                    {{ProductTotal.Quantity|number}}</b>
+                            </div> -->
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <!-- <th>select</th> -->
+                                        <th style="cursor: pointer;" (click)="sort('InvoiceType')">Inv. Type</th>
+                                        <th style="cursor: pointer;" (click)="sort('InvoiceNo')">Inv. No.</th>
+                                        <th style="cursor: pointer;" (click)="sort('InvoiceDate')">Inv. Date</th>
+                                        <th style="cursor: pointer;" (click)="sort('StockCode')">Stock Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('SizeName')">Size</th>
+                                        <th style="cursor: pointer;" (click)="sort('CategoryName')">Category Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('CompanyName')">Company</th>
+                                        <th style="cursor: pointer;" (click)="sort('HSNCode')">HSN Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('Quantity')">Quantity</th>
+                                        <th style="cursor: pointer;" (click)="sort('UnitName')">Unit</th>
+                                        <th style="cursor: pointer;" (click)="sort('MRP')">MRP</th>
+                                        <th style="cursor: pointer;" (click)="sort('NetPrice')">Net Price</th>
+                                        <!-- <th style="cursor: pointer;" (click)="sort('CostPrice')">Cost Price</th>
+                                        <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Disc.(%)</th>
+                                        <th style="cursor: pointer;" (click)="sort('Quantity')">Qty.</th> -->
+
+
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of ProductStockHistoryList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td><span
+                                                    [ngClass]="model.InvoiceType == 'Return' ?'badge bg-danger':model.InvoiceType == 'Sell' ?'badge bg-success':'badge bg-primary'">
+                                                    {{model.InvoiceType}}</span></td>
+                                            <td>{{model.InvoiceNo}}</td>
+                                            <td>{{model.InvoiceDate|date:"dd/MM/yyyy"}}</td>
+                                            <td>{{model.StockCode}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.SizeName}}</td>
+                                            <td>{{model.CategoryName}}</td>
+                                            <td>{{model.CompanyName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                            <td>{{model.MRP}}</td>
+                                            <td>{{model.NetPrice}}</td>
+
+                                            <!-- <td>{{model.CostPrice}}</td>
+                                            <td>{{model.DiscountPercentage}}%</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td><button class="btn btn-sm btn-success"
+                                                    (click)="getProductBarcode(model)">Print</button></td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>

@@ -1,0 +1,139 @@
+
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>New Product</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">New Product</li>
+            </ol>
+        </nav>
+    </div>
+    <app-edit-product></app-edit-product>
+    <!-- <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">New Product
+                            <a style="float: right;font-size: 14px;" routerLink="/admin/product">List Product </a>
+                        </h5>
+                        <form #myForm="ngForm">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" #CategoryId="ngModel" [(ngModel)]="Product.CategoryId" name="CategoryId"
+                                        [ngClass]="{'is-invalid':submitted && CategoryId.invalid}" required autofocus>
+                                        <option value="">--Select Category--</option>
+                                        <option [value]="model.CategoryId" *ngFor="let model of CategoryList">
+                                            {{model.CategoryName}}</option>
+                                    </select>
+                                    <div *ngIf="CategoryId.invalid && (CategoryId.dirty || CategoryId.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="CategoryId.errors?.['required']">
+                                            Category is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Unit <span class="text-danger">*</span></label>
+                                    <select class="form-select" #UnitId="ngModel" [(ngModel)]="Product.UnitId" name="UnitId"
+                                        [ngClass]="{'is-invalid':submitted && UnitId.invalid}" required autofocus>
+                                        <option value="">--Select Unit--</option>
+                                        <option [value]="model.UnitId" *ngFor="let model of UnitList">
+                                            {{model.UnitName}}</option>
+                                    </select>
+                                    <div *ngIf="UnitId.invalid && (UnitId.dirty || UnitId.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="UnitId.errors?.['required']">
+                                            Unit is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Size <span class="text-danger">*</span></label>
+                                    <select class="form-select" #SizeId="ngModel" [(ngModel)]="Product.SizeId" name="SizeId"
+                                        [ngClass]="{'is-invalid':submitted && SizeId.invalid}" required autofocus>
+                                        <option value="">--Select Size--</option>
+                                        <option [value]="model.SizeId" *ngFor="let model of SizeList">
+                                            {{model.SizeName}}</option>
+                                    </select>
+                                    <div *ngIf="SizeId.invalid && (SizeId.dirty || SizeId.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="SizeId.errors?.['required']">
+                                            Size is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Enter Product Name" #ProductName="ngModel"
+                                        [(ngModel)]="Product.ProductName" name="ProductName" class="form-control"
+                                        [ngClass]="{'is-invalid':submitted && ProductName.invalid}" required autofocus>
+        
+                                    <div *ngIf="ProductName.invalid && (ProductName.dirty || ProductName.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="ProductName.errors?.['required']">
+                                            Product Name is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Design No</label>
+                                    <input type="text" placeholder="Enter Design No" #DesignNo="ngModel"
+                                        [(ngModel)]="Product.DesignNo" name="DesignNo" class="form-control">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Discount (%)</label>
+                                    <input type="number" placeholder="Enter Discount (%)" #DiscountPercentage="ngModel"
+                                        [(ngModel)]="Product.DiscountPercentage" name="DiscountPercentage" class="form-control">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">HSN Code <span class="text-danger">*</span></label>
+                                    <input type="text" placeholder="Enter HSN Code" #HSNCode="ngModel"
+                                        [(ngModel)]="Product.HSNCode" name="HSNCode" class="form-control"
+                                        [ngClass]="{'is-invalid':submitted && HSNCode.invalid}" required autofocus>
+        
+                                    <div *ngIf="HSNCode.invalid && (HSNCode.dirty || HSNCode.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="HSNCode.errors?.['required']">
+                                            HSN Code is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Company Name</label>
+                                    <input type="text" placeholder="Enter Company Name" #CompanyName="ngModel"
+                                        [(ngModel)]="Product.CompanyName" name="CompanyName" class="form-control">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label class="form-label">Status <span class="text-danger">*</span></label>
+                                    <select class="form-select" #Status="ngModel" [(ngModel)]="Product.Status" name="Status"
+                                        [ngClass]="{'is-invalid':submitted && Status.invalid}" required autofocus>
+                                        <option value="">--Select Status--</option>
+                                        <option [value]="model.Key" *ngFor="let model of StatusList">
+                                            {{model.Value}}</option>
+                                    </select>
+                                    <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                        class="text-danger">
+                                        <div *ngIf="Status.errors?.['required']">
+                                            Status is required.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-primary" (click)="saveProduct(myForm)">Sumbit</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section> -->
+</main>

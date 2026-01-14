@@ -1,0 +1,309 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main" (keypress)="submit($event)">
+    <div class="pagetitle">
+        <h1>Goods Return</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Purchase</li>
+                <li class="breadcrumb-item active">Goods Return</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <h5 class="card-title">Goods Return</h5>
+
+                        <div class="list-group">
+                            <a class="list-group-item list-group-item-action" aria-current="true">
+                                <form #formProduct="ngForm" #formProductElement>
+                                    <div class="row">
+
+                                        <div class="col-lg-4 form-group">
+                                            <label class="form-label">Select Product</label>
+                                            <div class="d-flex align-items-center">
+                                                <input type="text" class="form-control flex-grow-1"
+                                                    placeholder="Search By Stock Code / Product Name"
+                                                    [(ngModel)]="SellProduct.ProductName" name="ProductName"
+                                                    (ngModelChange)="filterPatientList($event)"
+                                                    [matAutocomplete]="autoProduct" required>
+                                                <a mat-icon-button matSuffix *ngIf="SellProduct.ProductName"
+                                                    color="primary" (click)="clearPatient()" class="ms-2">
+                                                    <mat-icon><i class="ri-close-circle-line"></i></mat-icon>
+                                                </a>
+                                                <mat-autocomplete #autoProduct="matAutocomplete"
+                                                    (optionSelected)="afterPatientSelected($event)">
+                                                    <mat-option *ngFor="let option of ProductStockDetailForReturn"
+                                                        [id]="option.ProductStockId" [value]="option.ProductName">
+                                                        {{ option.SearchProduct }}
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- <div class="col-lg-4 form-group">
+                                            <label class="form-label">Product <span class="text-danger">*</span></label>
+                                            <ng-autocomplete id="productAutoComplete" [data]="ProductStockDetailForReturn"
+                                                [searchKeyword]="'SearchProduct'" placeholder="Enter Stock Code"
+                                                name="productAutoComplete" [itemTemplate]="productItemTemplate"
+                                                [notFoundTemplate]="productNotFoundTemplate"
+                                                #productAutoComplete="ngModel"
+                                                (inputChanged)="changeProductInput($event,formProduct)"
+                                                [(ngModel)]="SellProduct.productAutoComplete" [isLoading]="loadingProductStock"
+                                                (inputCleared)="clearProductStock()"
+                                                (selected)='afterProductStockSelected($event)' [minQueryLength]="1"
+                                                required="required" [autofocus]="SellProduct.SellProduct">
+                                            </ng-autocomplete>
+
+                                            <ng-template #productItemTemplate let-item>
+                                                <a [innerHTML]="item.SearchProduct"></a>
+                                            </ng-template>
+
+
+                                            <ng-template #productItemTemplate let-item>
+                                                <a [innerHTML]="item.SearchProduct"></a>
+                                            </ng-template>
+
+                                            <ng-template #productNotFoundTemplate let-notFound>
+                                                <div [innerHTML]="notFound">
+                                                </div>
+                                            </ng-template>
+
+                                            <div *ngIf="productAutoComplete.invalid && (productAutoComplete.dirty || productAutoComplete.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="productAutoComplete.errors?.['required']">
+                                                    Product is required.
+                                                </div>
+                                            </div>
+                                        </div> -->
+
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">Supplier <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" placeholder="Supplier" #SupplierName="ngModel"
+                                                [(ngModel)]="SellProduct.SupplierName" name="SupplierName"
+                                                 class="form-control" disabled="disabled"
+                                                [ngClass]="{'is-invalid':isProductSubmitted && SupplierName.invalid}"
+                                                required autofocus>
+
+                                            <div *ngIf="SupplierName.invalid && (SupplierName.dirty || SupplierName.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="SupplierName.errors?.['required']">
+                                                    Supplier is required.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">Rate <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" placeholder="Rate" #Rate="ngModel"
+                                                [(ngModel)]="SellProduct.Rate" name="Rate"
+                                                 class="form-control" disabled="disabled"
+                                                [ngClass]="{'is-invalid':isProductSubmitted && Rate.invalid}"
+                                                required autofocus>
+
+                                            <div *ngIf="Rate.invalid && (Rate.dirty || Rate.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="Rate.errors?.['required']">
+                                                    Rate is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Disc % </label>
+                                            
+                                            <input type="number" disabled="disabled" placeholder="Disc%"
+                                                [value]="SellProduct.DiscountPercentage" class="form-control">
+                                        </div>
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">Cost Price <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" placeholder="Cost Price" #CostPrice="ngModel"
+                                                [(ngModel)]="SellProduct.CostPrice" name="CostPrice"
+                                                 class="form-control" disabled="disabled"
+                                                [ngClass]="{'is-invalid':isProductSubmitted && CostPrice.invalid}"
+                                                required autofocus>
+
+                                            <div *ngIf="CostPrice.invalid && (CostPrice.dirty || CostPrice.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="CostPrice.errors?.['required']">
+                                                    Cost Price is required.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Qty. <span class="text-danger">*</span></label>
+                                            <input type="number" placeholder="Qty." #Quantity="ngModel"
+                                                (keypress)="keyPress($event)" min="0.1" (change)="changeCostPrice()"
+                                                [(ngModel)]="SellProduct.Quantity" name="Quantity" class="form-control"
+                                                [ngClass]="{'is-invalid':isProductSubmitted && Quantity.invalid}"
+                                                required autofocus>
+
+                                            <div *ngIf="Quantity.invalid && (Quantity.dirty || Quantity.touched || isProductSubmitted)"
+                                                class="text-danger">
+                                                <div *ngIf="Quantity.errors?.['required']">
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Unit </label>
+                                            <input type="text" disabled="disabled" [value]="SellProduct.UnitName"
+                                                class="form-control">
+                                        </div>
+                                        
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">Taxable Amount </label>
+                                            <input type="number" disabled="disabled" placeholder="Taxable Amount"
+                                                [value]="SellProduct.TaxableAmount" class="form-control">
+                                        </div>
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">GST %</label>
+                                            
+                                            <input type="number" disabled="disabled" placeholder="GST%"
+                                                [value]="SellProduct.GSTPercentage" class="form-control">
+                                        </div>
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">CGST Amount </label>
+                                            <input type="number" disabled="disabled" placeholder="GST Amount"
+                                                [value]="SellProduct.CGSTAmount" class="form-control">
+                                        </div>
+                                        
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">SGST Amount </label>
+                                            <input type="number" disabled="disabled" placeholder="GST Amount"
+                                                [value]="SellProduct.SGSTAmount" class="form-control">
+                                        </div>
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">IGST Amount </label>
+                                            <input type="number" disabled="disabled" placeholder="GST Amount"
+                                                [value]="SellProduct.IGSTAmount" class="form-control">
+                                        </div>
+                                        <div class="col-lg-2 form-group">
+                                            <label class="form-label">Gross Amount <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" disabled="disabled" placeholder="Gross Amount"
+                                                #GrossAmount="ngModel" [(ngModel)]="SellProduct.GrossAmount"
+                                                name="GrossAmount" class="form-control">
+                                        </div>
+                                        <div class="col-lg-1 form-group">
+                                            <label class="form-label">Add</label>
+                                            <br>
+                                            <button class="btn btn-primary" name="addProduct"
+                                                (click)="addSellProduct(formProduct)">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </a>
+                            <a class="list-group-item list-group-item-action">
+                                <div class="row">
+                                    <div class="col-lg-12 table-responsive">
+                                        <table class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Supplier</th>
+                                                    <th>Product</th>
+                                                    <th>Category</th>
+                                                    <th>Rate</th>
+                                                    <th>Disc (%)</th>
+                                                    <th>Cost Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Unit</th>
+                                                    <th>Taxable Amount</th>
+                                                    <th>GST (%)</th>
+                                                    <th>CGST</th>
+                                                    <th>SGST</th>
+                                                    <th>IGST</th>
+                                                    <th>Gross Amount</th>
+                                                    <th>Delete</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let model of SellProductList; let i = index">
+                                                    <td>{{i+ 1}}</td>
+                                                    <td>{{model.SupplierName}}</td>
+                                                    <td>{{model.StockCode + ' - ' + model.ProductName + ' - ' +
+                                                        model.HSNCode}}</td>
+                                                    <td>{{model.CategoryName}}</td>
+                                                    <td>
+                                                        {{model.Rate}}
+                                                    </td>
+                                                    <td>
+                                                        {{model.DiscountPercentage}}%
+                                                    </td>
+                                                    <td>
+                                                        {{model.CostPrice}}
+                                                    </td>
+                                                    <td>
+                                                        {{model.Quantity}}
+                                                    </td>
+                                                    <td>{{model.UnitName}}</td>
+
+                                                    <td>{{model.TaxableAmount}}</td>
+                                                    <td>
+                                                        {{model.GSTPercentage}}
+                                                    </td>
+                                                    <td>{{model.CGSTAmount}}</td>
+                                                    <td>{{model.SGSTAmount}}</td>
+                                                    <td>{{model.IGSTAmount}}</td>
+                                                    <td>{{model.GrossAmount}}</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-danger"
+                                                            (click)="removeData(SellProductList,i)"><i
+                                                                class="bi bi-trash-fill"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>Total Quantity</th>
+                                                    <th>{{TotalSellProduct.TotalQuantity|number}}</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        
+
+                    </div>
+                    <div class="card-footer text-center">
+                        <button type="button" class="btn btn-primary" (click)="saveGoodsReturn()">Sumbit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+<!-- 
+<div id="modal_customer" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <app-edit-customer (refreshCustomer)="getCustomerList($event)"></app-edit-customer>
+        </div>
+    </div>
+</div> -->

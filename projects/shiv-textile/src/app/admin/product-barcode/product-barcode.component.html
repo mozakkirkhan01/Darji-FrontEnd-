@@ -1,0 +1,131 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Barcode Print</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Product</li>
+                <li class="breadcrumb-item active">Barcode Print</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Barcode Print</h5>
+                        
+                        <div class="row form-group col-sm-12">
+                            <div class="col-sm-3">
+                                <label>Product</label>
+                                <input type="text" [(ngModel)]="Product.ProductName" class="form-control">
+                            </div>
+                            <!-- <div class="col-sm-3">
+                                <label>Category</label>
+                                <input type="text" [(ngModel)]="Product.CategoryName" class="form-control">
+                            </div> -->
+                            <div class="col-sm-3">
+                                <label>Size</label>
+                                <input type="text" [(ngModel)]="Product.SizeName" class="form-control">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>MRP</label>
+                                <input type="number" [(ngModel)]="Product.MRP" class="form-control">
+                            </div>
+                            <!-- <div class="col-sm-3">
+                                <label>SellingPrice</label>
+                                <input type="number" [(ngModel)]="Product.SellingPrice" class="form-control">
+                            </div> -->
+                            <div class="col-sm-3">
+                                <label>Discount %</label>
+                                <input type="number" [(ngModel)]="Product.DiscountPercentage" class="form-control">
+                            </div>
+                            <!-- <div class="col-sm-3">
+                                <label>Discount Amount</label>
+                                <input type="number" [(ngModel)]="Product.DiscountAmount" class="form-control">
+                            </div> -->
+                            <div class="col-sm-3">
+                                <label>Print Quantity</label>
+                                <input type="number" [(ngModel)]="Product.PrintQuantity" class="form-control">
+                            </div>
+                            
+                            <div class="col-sm-1">
+                                <label>Add</label>
+                                <br>
+                                <button (click)="addBardcode(Product)" class="btn btn-primary">ADD</button>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        
+                        <div class="row form-group" style="padding-top: 20px;">
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th style="cursor: pointer;" (click)="sort('ProductName')">Product</th>
+                                            <!-- <th style="cursor: pointer;" (click)="sort('CategoryName')">Category</th> -->
+                                            <th style="cursor: pointer;" (click)="sort('SizeName')">Size</th>
+                                            <th style="cursor: pointer;" (click)="sort('MRP')">MRP</th>
+                                            <!-- <th style="cursor: pointer;" (click)="sort('SellingPrice')">S.P</th> -->
+                                            <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Disc. %</th>
+                                            <!-- <th style="cursor: pointer;" (click)="sort('DiscountAmount')">Disc. Amt.</th> -->
+                                            <th>No Of Barcodes</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let model of PrintList|filter:Search ; let i = index">
+                                            <td>{{i+ 1}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <!-- <td>{{model.CategoryName}}</td> -->
+                                            <td>{{model.SizeName}}</td>
+                                            <td>{{model.MRP}}</td>
+                                            <!-- <td>{{model.SellingPrice}}</td> -->
+                                            <td>{{model.DiscountPercentage}}</td>
+                                            <!-- <td>{{model.DiscountAmount}}</td> -->
+                                            <td>{{model.PrintQuantity}}</td>
+
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="removeBarcode(i)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <!-- <th></th>
+                                            <th></th>
+                                            <th></th> -->
+                                            <th><b>Total BarCodes:</b></th>
+                                            <th>{{PrintProduct.TotalPrintQuantity}}</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center" *ngIf="PrintList.length != 0">
+                        <button class="btn btn-primary" (click)="printBarCodeFinal()">Old Print</button>
+                    </div>
+                    <div class="card-footer text-center" *ngIf="PrintList.length != 0">
+                        <button class="btn btn-primary" (click)="printBarCodeNewFinal()">New Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>

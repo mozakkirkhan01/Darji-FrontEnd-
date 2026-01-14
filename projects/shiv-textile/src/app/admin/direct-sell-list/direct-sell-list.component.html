@@ -1,0 +1,207 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Direct Sell List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Sell Report</li>
+                <li class="breadcrumb-item active">Direct Sell List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Direct Sell
+                            <a style="float: right;"
+                                routerLink="/admin/direct-sell">New Direct Sell</a>
+                        </h5>
+
+                        <div class="row">
+                            <div class="row form-group col-sm-12">
+                                <div class="col-sm-3">
+                                    <label>From Date</label>
+                                    <input type="date" [(ngModel)]="sell.FromDate" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>To Date</label>
+                                    <input type="date" [(ngModel)]="sell.ToDate" class="form-control">
+                                </div>
+                                
+                                <div class="col-sm-1">
+                                    <label>Search</label>
+                                    <button (click)="getDirectSellList()" class="btn btn-primary"><i
+                                            class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th>Invoice</th>
+                                        <th style="cursor: pointer;" (click)="sort('InvoiceDate')">Invoice Date</th>
+                                        <th style="cursor: pointer;" (click)="sort('InvoiceNo')">Invoice No</th>
+                                        <th style="cursor: pointer;" (click)="sort('MobileNo')">Mobile No</th>
+                                        <th style="cursor: pointer;" (click)="sort('CustomerName')">Customer Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('TaxableAmount')">Taxable Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('CGSTAmount')">CGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('SGSTAmount')">SGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GrandTotal')">Paid Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('DuesAmount')">Dues Amount</th>
+                                        <!-- <th style="cursor: pointer;" (click)="sort('StatusName')">Status</th> -->
+                                        <th>View Details</th>
+                                        <!-- <th>Edit</th>
+                                        <th>Delete</th> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of DirectSellList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" (click)="printInvoice(model.DirectSellId)">Print</button>
+                                            </td>
+                                            <td>{{model.InvoiceDate|date:'dd-MM-yyyy'}}</td>
+                                            <td>{{model.InvoiceNo}}</td>
+                                            <td>{{model.MobileNo}}</td>
+                                            <td>{{model.CustomerName}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.IGSTAmount}}</td>
+                                            <td>{{model.NetAmount}}</td>
+                                            <td>{{model.GrandTotal}}</td>
+                                            <td>{{model.DuesAmount}}</td>
+                                            <!-- <td><span [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
+                                                    {{model.StatusName}}</span></td> -->
+                                            <td>
+                                                <button class="btn btn-sm btn-secondary" (click)="getDirectSellDetail(model)"><i
+                                                        class="bi bi-card-text"></i> </button>
+                                            </td>
+                                            <!-- <td>
+                                                <button class="btn btn-sm btn-warning"><i
+                                                        class="bi bi-pencil-square" (click)="editSell(model)"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deleteSell(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>TOTAL</th>
+                                            <th>{{SellTotal.TaxableAmount|number}}</th>
+                                            <th>{{SellTotal.CGSTAmount|number}}</th>
+                                            <th>{{SellTotal.SGSTAmount|number}}</th>
+                                            <th>{{SellTotal.IGSTAmount|number}}</th>
+                                            <th>{{SellTotal.NetAmount|number}}</th>
+                                            <th>{{SellTotal.GrandTotal|number}}</th>
+                                            <th>{{SellTotal.DuesAmount|number}}</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Direct Sell Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action active" aria-current="true">
+                        Products
+                    </a>
+                    <a class="list-group-item list-group-item-action">
+                        <div class="row">
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product Name</th>
+                                            <th>Selling Price</th>
+                                            <th>Quantity</th>
+                                            <th>Discount (%)</th>
+                                            <th>Discount (₹)</th>
+                                            <th>Taxable Amount</th>
+                                            <th>GST (%)</th>
+                                            <th>CGST</th>
+                                            <th>SGST</th>
+                                            <th>IGST</th>
+                                            <th>Gross Amount</th>
+                                            <th>Sell Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let model of DirectSellProductList; let i = index">
+                                            <td>{{i+ 1}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.SellingPrice}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.DiscountPercentage}}</td>
+                                            <td>{{model.DiscountAmount}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.IGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+                                            <td><span [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">{{model.SellingStatus==1?"Sold":"Return"}}</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

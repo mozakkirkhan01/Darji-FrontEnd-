@@ -1,0 +1,130 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Goods Return List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Master Entry</li>
+                <li class="breadcrumb-item active">Goods Return List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        
+                        <div class="row">
+                            <div class="row form-group col-sm-12">
+                                <div class="col-sm-3">
+                                    <label>From Date</label>
+                                    <input type="date" [(ngModel)]="sell.FromDate" class="form-control">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label>To Date</label>
+                                    <input type="date" [(ngModel)]="sell.ToDate" class="form-control">
+                                </div>
+                                
+                                <div class="col-sm-1">
+                                    <label>Search</label>
+                                    <button (click)="getGoodsReturnList()" class="btn btn-primary"><i
+                                            class="bi bi-search"></i></button>
+                                </div>
+                            </div>
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('GRDate')">GR Date</th>
+                                        <th style="cursor: pointer;" (click)="sort('SupplierName')">Supplier</th>
+                                        <th style="cursor: pointer;" (click)="sort('ProductName')">Category</th>
+                                        <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('Quantity')">Quantity</th>
+                                        <th style="cursor: pointer;" (click)="sort('Rate')">Rate</th>
+                                        <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Disc(%)</th>
+                                        <th style="cursor: pointer;" (click)="sort('CostPrice')">Cost Price</th>
+                                        <th style="cursor: pointer;" (click)="sort('TaxableAmount')">Taxable Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GSTPercentage')">GST(%)</th>
+                                        <th style="cursor: pointer;" (click)="sort('CGSTAmount')">CGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('SGSTAmount')">SGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GrossAmount')">Gross Amount</th>
+                                        <th style="cursor: pointer;" (click)="sort('GrByName')">Gr By</th>
+                                        <!-- <th>Status</th>
+                                        <th>View Details</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let model of GoodsReturnList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            
+                                            <td>{{model.GRDate|date:'dd-MM-yyyy'}}</td>
+                                            <td>{{model.SupplierName}}</td>
+                                            <td>{{model.CategoryName}}</td>
+                                            <td>{{model.ProductName}}</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td>{{model.Rate}}</td>
+                                            <td>{{model.DiscountPercentage}}</td>
+                                            <td>{{model.CostPrice}}</td>
+                                            <td>{{model.TaxableAmount}}</td>
+                                            <td>{{model.GSTPercentage}}</td>
+                                            <td>{{model.CGSTAmount}}</td>
+                                            <td>{{model.SGSTAmount}}</td>
+                                            <td>{{model.IGSTAmount}}</td>
+                                            <td>{{model.GrossAmount}}</td>
+                                            <td>{{model.GrByName}}</td>
+                                            <!-- <td><span [ngClass]="model.OldSellId==model.SellId?'text-danger':model.NewSellId==model.SellId?'text-primary':'text-success'">
+                                                {{model.OldSellId==model.SellId?'Return':model.NewSellId==model.SellId?'New':'Normal'}}
+                                            </span></td>
+                                            
+                                            <td>
+                                                <button class="btn btn-sm btn-secondary" (click)="getSellDetail(model)"><i
+                                                        class="bi bi-card-text"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning"><i
+                                                        class="bi bi-pencil-square" (click)="editSell(model)"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deleteSell(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                    
+                                </table>
+
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>

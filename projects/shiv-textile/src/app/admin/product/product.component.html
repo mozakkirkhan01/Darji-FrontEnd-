@@ -1,0 +1,256 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Product List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Product</li>
+                <li class="breadcrumb-item active">Product List</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+
+                    <div class="card-body">
+                        <h5 class="card-title">List Product
+                            <button class="btn btn-primary btn-sm" style="float: right;" (click)="newProduct(myForm)">
+                                Add
+                                New</button>
+                        </h5>
+
+
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm"
+                                        [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}} </option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search"><input
+                                        class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
+                                        placeholder="Search..." type="text"></div>
+
+                            </div>
+                            <div class="col-lg-12">
+                                <b class="text-primary" style="float: right;">Total Available Stock :
+                                    {{ProductTotal.Quantity|number}}</b>
+                            </div>
+                            <div class="col-lg-12 table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <th>#</th>
+                                        <th style="cursor: pointer;" (click)="sort('ProductName')">Product Name</th>
+                                        <!-- <th style="cursor: pointer;" (click)="sort('SizeName')">Size</th> -->
+                                        <th style="cursor: pointer;" (click)="sort('CategoryName')">Category Name</th>
+                                        <th style="cursor: pointer;" (click)="sort('CompanyName')">Company</th>
+                                        <th style="cursor: pointer;" (click)="sort('HSNCode')">HSN Code</th>
+                                        <th style="cursor: pointer;" (click)="sort('DesignNo')">Design No</th>
+                                        <th style="cursor: pointer;" (click)="sort('UnitName')">Unit</th>
+                                        <th style="cursor: pointer;" (click)="sort('DiscountPercentage')">Discount</th>
+                                        <th style="cursor: pointer;" (click)="sort('Quantity')">Stock</th>
+                                        <th style="cursor: pointer;" (click)="sort('StatusName')">Status</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </thead>
+                                    <tbody
+                                        *ngFor="let model of ProductList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
+                                        <tr>
+                                            <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
+                                            <td><a class="text-primary" (click)="getProductStockList(model)">{{model.ProductName}}</a></td>
+                                            <!-- <td>{{model.SizeName}}</td> -->
+                                            <td>{{model.CategoryName}}</td>
+                                            <td>{{model.CompanyName}}</td>
+                                            <td>{{model.HSNCode}}</td>
+                                            <td>{{model.DesignNo}}</td>
+                                            <td>{{model.UnitName}}</td>
+                                            <td>{{model.DiscountPercentage}} %</td>
+                                            <td>{{model.Quantity}}</td>
+                                            <td><span
+                                                    [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
+                                                    {{model.StatusName}}</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" (click)="editProduct(model)"><i
+                                                        class="bi bi-pencil-square"></i> </button>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger" (click)="deleteProduct(model)"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="model.ProductStockList.length > 0">
+                                            <td></td>
+                                            <td colspan="12">
+                                                <table class="table table-sm table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Stock Code</th>
+                                                            <th>Size</th>
+                                                            <th>MRP</th>
+                                                            <th>Cost Price</th>
+                                                            <th>Selling Price</th>
+                                                            <th>Stock</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let ps1 of model.ProductStockList">
+                                                            <td>{{ps1.StockCode}}</td>
+                                                            <td>{{ps1.SizeName}}</td>
+                                                            <td>{{ps1.MRP}}</td>
+                                                            <td>{{ps1.CostPrice}}</td>
+                                                            <td>{{ps1.SellingPrice}}</td>
+                                                            <td>{{ps1.Quantity}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="dataTable-bottom">
+                                <pagination-controls (pageChange)="onTableDataChange($event)" style="float: right;"
+                                    class="my-pagination"></pagination-controls>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{Product.ProductId > 0 ? 'Update' : 'New'}} Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #myForm="ngForm">
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Category <span class="text-danger">*</span></label>
+                            <select class="form-select" #CategoryId="ngModel" [(ngModel)]="Product.CategoryId"
+                                name="CategoryId" [ngClass]="{'is-invalid':submitted && CategoryId.invalid}" required
+                                autofocus>
+                                <option value="">--Select Category--</option>
+                                <option [value]="model.CategoryId" *ngFor="let model of CategoryList">
+                                    {{model.CategoryName}}</option>
+                            </select>
+                            <div *ngIf="CategoryId.invalid && (CategoryId.dirty || CategoryId.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="CategoryId.errors?.['required']">
+                                    Category is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Unit <span class="text-danger">*</span></label>
+                            <select class="form-select" #UnitId="ngModel" [(ngModel)]="Product.UnitId" name="UnitId"
+                                [ngClass]="{'is-invalid':submitted && UnitId.invalid}" required autofocus>
+                                <option value="">--Select Unit--</option>
+                                <option [value]="model.UnitId" *ngFor="let model of UnitList">
+                                    {{model.UnitName}}</option>
+                            </select>
+                            <div *ngIf="UnitId.invalid && (UnitId.dirty || UnitId.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="UnitId.errors?.['required']">
+                                    Unit is required.
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="col-sm-4 form-group">
+                            <label class="form-label">Size <span class="text-danger">*</span></label>
+                            <select class="form-select" #SizeId="ngModel" [(ngModel)]="Product.SizeId" name="SizeId"
+                                [ngClass]="{'is-invalid':submitted && SizeId.invalid}" required autofocus>
+                                <option value="">--Select Size--</option>
+                                <option [value]="model.SizeId" *ngFor="let model of SizeList">
+                                    {{model.SizeName}}</option>
+                            </select>
+                            <div *ngIf="SizeId.invalid && (SizeId.dirty || SizeId.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="SizeId.errors?.['required']">
+                                    Size is required.
+                                </div>
+                            </div>
+                        </div> -->
+                        
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" placeholder="Enter Company Name" #CompanyName="ngModel"
+                                [(ngModel)]="Product.CompanyName" name="CompanyName" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Status <span class="text-danger">*</span></label>
+                            <select class="form-select" #Status="ngModel" [(ngModel)]="Product.Status" name="Status"
+                                [ngClass]="{'is-invalid':submitted && Status.invalid}" required autofocus>
+                                <option value="">--Select Status--</option>
+                                <option [value]="model.Key" *ngFor="let model of StatusList">
+                                    {{model.Value}}</option>
+                            </select>
+                            <div *ngIf="Status.invalid && (Status.dirty || Status.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="Status.errors?.['required']">
+                                    Status is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Enter Product Name" #ProductName="ngModel"
+                                [(ngModel)]="Product.ProductName" name="ProductName" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && ProductName.invalid}" required autofocus>
+
+                            <div *ngIf="ProductName.invalid && (ProductName.dirty || ProductName.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="ProductName.errors?.['required']">
+                                    Product Name is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Design No</label>
+                            <input type="text" placeholder="Enter Design No" #DesignNo="ngModel"
+                                [(ngModel)]="Product.DesignNo" name="DesignNo" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">Discount (%)</label>
+                            <input type="number" placeholder="Enter Discount (%)" #DiscountPercentage="ngModel"
+                                [(ngModel)]="Product.DiscountPercentage" name="DiscountPercentage" class="form-control">
+                        </div>
+                        <div class="col-sm-4 form-group">
+                            <label class="form-label">HSN Code <span class="text-danger">*</span></label>
+                            <input type="text" placeholder="Enter HSN Code" #HSNCode="ngModel"
+                                [(ngModel)]="Product.HSNCode" name="HSNCode" class="form-control"
+                                [ngClass]="{'is-invalid':submitted && HSNCode.invalid}" required autofocus>
+
+                            <div *ngIf="HSNCode.invalid && (HSNCode.dirty || HSNCode.touched || submitted)"
+                                class="text-danger">
+                                <div *ngIf="HSNCode.errors?.['required']">
+                                    HSN Code is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveProduct(myForm)">Save changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>
