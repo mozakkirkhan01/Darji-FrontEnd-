@@ -32,7 +32,7 @@
                                     </select>
                                     entries per page
                                 </div>
-                                
+
                                 <div class="dataTable-search"><input
                                         class="dataTable-input form-control form-control-sm" [(ngModel)]="Search"
                                         placeholder="Search..." type="text"></div>
@@ -44,8 +44,8 @@
                                         <th style="cursor: pointer;" (click)="sort('CustomerName')">Customer Name</th>
                                         <th style="cursor: pointer;" (click)="sort('MobileNo')">Contact No</th>
                                         <th style="cursor: pointer;" (click)="sort('GSTNo')">GSTIN</th>
-                                        <!-- <th>View Details</th>
                                         <th>Edit</th>
+                                        <!-- <th>View Details</th>
                                         <th>Delete</th> -->
                                     </thead>
                                     <tbody>
@@ -56,14 +56,16 @@
                                             <td>{{model.MobileNo}}</td>
                                             <td>{{model.GSTNo}}</td>
 
-                                            
+
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                                    data-bs-target="#modal_popUp" (click)="editCustomerList(model)">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                            </td>
                                             <!-- <td>
                                                 <button class="btn btn-sm btn-secondary" (click)="getPurchaseDetail(model)"><i
                                                         class="bi bi-card-text"></i> </button>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning"><i
-                                                        class="bi bi-pencil-square" (click)="editPurchase(model)"></i> </button>
                                             </td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" (click)="deletePurchase(model)"><i
@@ -71,7 +73,7 @@
                                             </td> -->
                                         </tr>
                                     </tbody>
-                                    
+
                                 </table>
 
                             </div>
@@ -88,5 +90,94 @@
         </div>
 
     </section>
+
+
 </main>
 
+<div id="modal_popUp" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Edit Customer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #myForm="ngForm">
+                    <div class="row">
+                        <div class="row">
+
+                            <!-- Customer Name -->
+                            <div class="col-sm-6 form-group">
+                                <label>Customer Name</label>
+                                <input type="text" class="form-control" name="CustomerName"
+                                    [(ngModel)]="selectedCustomer.CustomerName" required>
+                                <small class="text-danger" *ngIf="!selectedCustomer.CustomerName">
+                                    Customer name is required
+                                </small>
+                            </div>
+
+                            <!-- Mobile No -->
+                            <div class="col-sm-6 form-group">
+                                <label>Mobile No</label>
+                                <input type="text" class="form-control" name="MobileNo" maxlength="10"
+                                    [(ngModel)]="selectedCustomer.MobileNo" required>
+                                <small class="text-danger" *ngIf="!selectedCustomer.MobileNo">
+                                    Mobile number is required
+                                </small>
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label>GST No</label>
+                                <input type="text" class="form-control" name="GSTNo"
+                                    [(ngModel)]="selectedCustomer.GSTNo">
+                            </div>
+
+                            <!-- <div class="col-sm-6 form-group">
+                                <label>Alternate No</label>
+                                <input type="text" class="form-control" name="AlternateNo"
+                                    [(ngModel)]="selectedCustomer.AlternateNo">
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="Email"
+                                    [(ngModel)]="selectedCustomer.Email">
+                            </div>
+
+                            <div class="col-sm-6 form-group">
+                                <label>State Code</label>
+                                <input type="text" class="form-control" name="StateCode"
+                                    [(ngModel)]="selectedCustomer.StateCode">
+                            </div>
+
+                            <div class="col-sm-12 form-group">
+                                <label>Full Address</label>
+                                <textarea class="form-control" rows="3" name="FullAddress"
+                                    [(ngModel)]="selectedCustomer.FullAddress">
+                                  </textarea>
+                            </div> -->
+
+                            <!-- Status -->
+                            <div class="col-sm-6 form-group">
+                                <label>Status</label>
+                                <select class="form-control" name="Status" [(ngModel)]="selectedCustomer.Status">
+                                    <option [ngValue]="1">Active</option>
+                                    <option [ngValue]="0">Inactive</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="saveCustomerList()">{{selectedCustomer.CustomerId
+                    >
+                    0 ? 'Update':'Submit'}} changes</button>
+            </div>
+
+        </div>
+    </div>
+</div>
