@@ -47,7 +47,7 @@ export class EditCustomerComponent implements OnInit {
     }
     this.Customer.UpdatedBy = this.employeeDetail.EmployeeId;
     this.dataLoading = true;
-    this.service.saveCustomer(this.Customer).subscribe(r1 => {
+    this.service.saveCustomerList(this.Customer).subscribe(r1 => {
       let response = r1 as any;
       if (response.Message == ConstantData.SuccessMessage) {
         toastr.success("One record created successfully.", "Operation Success");
