@@ -324,7 +324,7 @@ export class AppService {
   getSellListByCustomer(obj: any) {
     return this.http.post(this.baseUrl + '/api/Sell/SellListByCustomer', obj)
   }
-  saveCustomer(obj: any) {
+  saveCustomerList(obj: any) {
     return this.http.post(this.baseUrl + '/api/Customer/saveCustomer', obj)
   }
   deleteCustomer(obj: any) {
