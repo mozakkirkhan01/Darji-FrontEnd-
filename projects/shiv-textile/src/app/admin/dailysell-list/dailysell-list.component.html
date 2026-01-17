@@ -120,6 +120,7 @@
                                             <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('GrandTotal')">Paid Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('PaymentMode')">Payment Mode</th>
                                             <th style="cursor: pointer;" (click)="sort('DuesAmount')">Dues Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('SellsName')">SalesMan</th>
                                             <th>View Details</th>
@@ -143,6 +144,8 @@
                                             <td>{{model.IGSTAmount}}</td>
                                             <td>{{model.NetAmount}}</td>
                                             <td>{{model.GrandTotal}}</td>
+                                           <td>{{ getPaymentModeText(model.PaymentMode) }}</td>
+
                                             <td>{{model.DuesAmount}}</td>
                                             <td>{{model.SellsName}}</td>
                                             <td>

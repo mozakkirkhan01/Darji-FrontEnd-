@@ -15,7 +15,8 @@ import { LocalService } from "../../utils/local.service";
 export class DailysellListComponent implements OnInit {
   employeeDetail: any;
   DailySellList: any[];
-  SaleBillerReport:any[];
+  paymentModes = ConstantData.PaymentModeList;
+  SaleBillerReport: any[];
   SaleSummaryReport: any[];
   EmployeeList: any[];
   dataLoading: boolean = false;
@@ -214,36 +215,36 @@ export class DailysellListComponent implements OnInit {
   }
 
   ShopList: any = [];
-    getShopList() {
-      this.dataLoading = true;
-      this.service.getShopList({}).subscribe(r1 => {
-        let response = r1 as any;
-        if (response.Message == ConstantData.SuccessMessage) {
-          this.ShopList = response.ShopList;
-        } else {
-          toastr.error(response.Message);
-        }
-        this.dataLoading = false;
-      }, (err => {
-        toastr.error("Error Occured while fetching data.");
-        this.dataLoading = false;
-      }));
-    }
-  
-    selectShopAddress() {
-      
-      for (let i = 0; i < this.ShopList.length; i++) {
-        const e = this.ShopList[i];
-        if (e.ShopId == this.SalesMan.ShopId) {
-          this.SalesMan.Address = e.Address;
-          break;
-        }
-        else{
-          this.SalesMan.Address = '';
-        }
+  getShopList() {
+    this.dataLoading = true;
+    this.service.getShopList({}).subscribe(r1 => {
+      let response = r1 as any;
+      if (response.Message == ConstantData.SuccessMessage) {
+        this.ShopList = response.ShopList;
+      } else {
+        toastr.error(response.Message);
+      }
+      this.dataLoading = false;
+    }, (err => {
+      toastr.error("Error Occured while fetching data.");
+      this.dataLoading = false;
+    }));
+  }
+
+  selectShopAddress() {
+
+    for (let i = 0; i < this.ShopList.length; i++) {
+      const e = this.ShopList[i];
+      if (e.ShopId == this.SalesMan.ShopId) {
+        this.SalesMan.Address = e.Address;
+        break;
+      }
+      else {
+        this.SalesMan.Address = '';
       }
     }
-  
+  }
+
 
   SellTotal: any = {};
   getDailySellList() {
@@ -269,6 +270,8 @@ export class DailysellListComponent implements OnInit {
     }
 
     this.service.getDailySellList(obj).subscribe(r1 => {
+    console.log("API Response 👉", obj);
+
       let response = r1 as any;
       if (response.Message == ConstantData.SuccessMessage) {
         this.DailySellList = response.DailySellList;
@@ -285,6 +288,8 @@ export class DailysellListComponent implements OnInit {
           this.SellTotal.GrandTotal += e1.GrandTotal;
           this.SellTotal.DuesAmount += e1.DuesAmount;
         });
+       console.log("Final Total 👉", this.SellTotal);
+
       } else {
         toastr.error(response.Message);
       }
@@ -295,8 +300,28 @@ export class DailysellListComponent implements OnInit {
     }));
   }
 
+
   printInvoice(id: any) {
     this.service.printSellInvoice(id);
   }
+    getPaymentModeName(id: number): string {
+    const mode = this.paymentModes.find(x => x.Key === id);
+    return mode ? mode.Value : '';
+  }
+
+
+getPaymentModeText(mode: any): string {
+  if (!mode || mode === 0) return 'Cash';
+
+  switch (+mode) {
+    case 1: return 'Cash';
+    case 2: return 'Online';
+    case 3: return 'Paytm';
+    default: return 'Unknown';
+  }
+}
 
 }
+
+
+
