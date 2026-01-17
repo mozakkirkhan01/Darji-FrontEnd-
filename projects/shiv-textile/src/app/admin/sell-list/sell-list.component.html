@@ -19,8 +19,7 @@
 
                     <div class="card-body">
                         <h5 class="card-title">List Sell
-                            <a style="float: right;"
-                                routerLink="/admin/sell">New Sell</a>
+                            <a style="float: right;" routerLink="/admin/sell">New Sell</a>
                         </h5>
 
                         <div class="row">
@@ -33,7 +32,7 @@
                                     <label>To Date</label>
                                     <input type="date" [(ngModel)]="sell.ToDate" class="form-control">
                                 </div>
-                                
+
                                 <div class="col-sm-1">
                                     <label>Search</label><br>
                                     <button (click)="getSellList()" class="btn btn-primary"><i
@@ -67,6 +66,7 @@
                                         <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST </th>
                                         <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Amt</th>
                                         <th style="cursor: pointer;" (click)="sort('GrandTotal')">Paid </th>
+                                        <th style="cursor: pointer;" (click)="sort('PaymentMode')">Mode </th>
                                         <th style="cursor: pointer;" (click)="sort('DuesAmount')">Dues</th>
                                         <th style="cursor: pointer;" (click)="sort('CreatedName')">Login</th>
                                         <th style="cursor: pointer;" (click)="sort('SellsName')">Sells Person</th>
@@ -80,7 +80,8 @@
                                             *ngFor="let model of SellList|filter:Search|orderBy:sortKey:reverse|paginate: { itemsPerPage: itemPerPage, currentPage: p } ; let i = index">
                                             <td>{{(itemPerPage * (p -1)) +i+ 1}}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-primary" (click)="printInvoice(model)">Print</button>
+                                                <button class="btn btn-sm btn-primary"
+                                                    (click)="printInvoice(model)">Print</button>
                                             </td>
                                             <td>{{model.InvoiceDate|date:'dd-MM-yyyy'}}</td>
                                             <td>{{model.InvoiceNo}}</td>
@@ -92,21 +93,25 @@
                                             <td>{{model.IGSTAmount}}</td>
                                             <td>{{model.NetAmount}}</td>
                                             <td>{{model.GrandTotal}}</td>
+                                            <td>{{ getPaymentModeName(model.PaymentMode) }}</td>
+
                                             <td>{{model.DuesAmount}}</td>
                                             <td>{{model.CreatedName}}</td>
                                             <td>{{model.SellsName}}</td>
-                                            <td><span [ngClass]="model.OldSellId==model.SellId?'text-danger':model.NewSellId==model.SellId?'text-primary':'text-success'">
-                                                {{model.OldSellId==model.SellId?'Return':model.NewSellId==model.SellId?'New':'Normal'}}
-                                            </span></td>
+                                            <td><span
+                                                    [ngClass]="model.OldSellId==model.SellId?'text-danger':model.NewSellId==model.SellId?'text-primary':'text-success'">
+                                                    {{model.OldSellId==model.SellId?'Return':model.NewSellId==model.SellId?'New':'Normal'}}
+                                                </span></td>
                                             <!-- <td><span [ngClass]="model.Status == 2 ?'badge bg-warning':'badge bg-success'">
                                                     {{model.StatusName}}</span></td> -->
                                             <td>
-                                                <button class="btn btn-sm btn-secondary" (click)="getSellDetail(model)"><i
-                                                        class="bi bi-card-text"></i> </button>
+                                                <button class="btn btn-sm btn-secondary"
+                                                    (click)="getSellDetail(model)"><i class="bi bi-card-text"></i>
+                                                </button>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-warning"><i
-                                                        class="bi bi-pencil-square" (click)="editSell(model)"></i> </button>
+                                                <button class="btn btn-sm btn-warning"><i class="bi bi-pencil-square"
+                                                        (click)="editSell(model)"></i> </button>
                                             </td>
                                             <td>
                                                 <button class="btn btn-sm btn-danger" (click)="deleteSell(model)"><i
@@ -209,7 +214,9 @@
                                             <td>{{model.SGSTAmount}}</td>
                                             <td>{{model.IGSTAmount}}</td>
                                             <td>{{model.GrossAmount}}</td>
-                                            <td><span [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">{{model.SellingStatus==1?"Sold":"Return"}}</span></td>
+                                            <td><span
+                                                    [ngClass]="model.SellingStatus==1?'text-primary':'text-danger'">{{model.SellingStatus==1?"Sold":"Return"}}</span>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>

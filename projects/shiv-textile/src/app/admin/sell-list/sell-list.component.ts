@@ -16,6 +16,7 @@ export class SellListComponent implements OnInit {
   employeeDetail: any;
   sell: any = {};
   SellList: any[];
+  paymentModes = ConstantData.PaymentModeList;
   dataLoading: boolean = false;
   Search: string;
   reverse: boolean = true;
@@ -99,7 +100,7 @@ export class SellListComponent implements OnInit {
     this.service.getSellList(this.sell).subscribe(r1 => {
       let response = r1 as any;
       console.log(response);
-      
+
       if (response.Message == ConstantData.SuccessMessage) {
         this.SellList = response.SellList;
         this.SellList.forEach((e1: any) => {
@@ -156,6 +157,11 @@ export class SellListComponent implements OnInit {
     else {
       this.service.printSellInvoice(obj.SellId);
     }
+  }
+
+  getPaymentModeName(id: number): string {
+    const mode = this.paymentModes.find(x => x.Key === id);
+    return mode ? mode.Value : '';
   }
 
 }
