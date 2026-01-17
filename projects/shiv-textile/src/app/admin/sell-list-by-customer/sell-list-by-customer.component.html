@@ -117,6 +117,7 @@
                                             <th style="cursor: pointer;" (click)="sort('IGSTAmount')">IGST</th>
                                             <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('PaidAmount')">Paid Amount</th>
+                                            <th style="cursor: pointer;" (click)="sort('PaymentMode')">Payment Mode</th>
                                             <th style="cursor: pointer;" (click)="sort('DuesAmount')">Dues Amount</th>
                                             <th style="cursor: pointer;" (click)="sort('CreatedName')">Created By</th>
                                             <th style="cursor: pointer;" (click)="sort('SellsName')">Sales Person</th>
@@ -144,6 +145,7 @@
                                             <td class="text-end">₹{{model.IGSTAmount | number:'1.2-2'}}</td>
                                             <td class="text-end">₹{{model.NetAmount | number:'1.2-2'}}</td>
                                             <td class="text-end">₹{{model.PaidAmount | number:'1.2-2'}}</td>
+                                            <td class="text-end">{{ getPaymentModeText(model.PaymentMode)}}</td>
                                             <td class="text-end">₹{{model.DuesAmount | number:'1.2-2'}}</td>
                                             <td>{{model.CreatedName}}</td>
                                             <td>{{model.SellsName}}</td>
@@ -167,6 +169,7 @@
                                             <th class="text-end">₹{{SellTotal.IGSTAmount | number:'1.2-2'}}</th>
                                             <th class="text-end">₹{{SellTotal.NetAmount | number:'1.2-2'}}</th>
                                             <th class="text-end">₹{{SellTotal.GrandTotal | number:'1.2-2'}}</th>
+                                            <th class="text-end">₹{{getPaymentModeText(SellTotal.PaymentMode)}}</th>
                                             <th class="text-end">₹{{SellTotal.DuesAmount | number:'1.2-2'}}</th>
                                             <th colspan="4"></th>
                                         </tr>

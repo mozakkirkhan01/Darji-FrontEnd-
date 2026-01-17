@@ -19,6 +19,7 @@ export class SellListByCustomerComponent implements OnInit {
   employeeDetail: any;
   sell: any = {};
   SellList: any[] = [];
+  PaymentModeList = ConstantData.PaymentModeList;
   dataLoading: boolean = false;
   Search: string = '';
   reverse: boolean = true;
@@ -319,4 +320,16 @@ export class SellListByCustomerComponent implements OnInit {
       );
     }
   }
+getPaymentModeText(mode: any): string {
+  if (!mode || mode === 0) return 'Cash';
+
+  switch (+mode) {
+    case 1: return 'Cash';
+    case 2: return 'Online';
+    case 3: return 'Paytm';
+    default: return 'Unknown';
+  }
+}
+
+
 }
