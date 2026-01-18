@@ -14,7 +14,7 @@ export class AppService {
   constructor(private http: HttpClient) {
 
    this.baseUrl = "http://localhost:3776/";
-     //this.baseUrl = "https://darjiapi.winnexcode.com/";
+    // this.baseUrl = "https://darjiapi.winnexcode.com/";
   }
 
 
