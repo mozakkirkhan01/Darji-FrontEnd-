@@ -108,3 +108,73 @@ b{
   width: 70px;
 }
 
+/* Separate button styles */
+.lock-btn {
+  color: #dc3545 !important;
+  transition: all 0.3s ease;
+}
+
+.lock-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 5px;
+}
+
+.unlock-btn {
+  color: #28a745 !important;
+  transition: all 0.3s ease;
+}
+
+.unlock-btn:hover {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-radius: 5px;
+}
+/* Lock/Unlock Button Styles */
+.lock-toggle-btn {
+  transition: all 0.3s ease;
+  border-radius: 5px;
+  padding: 8px 15px !important;
+  font-weight: 500;
+}
+
+.lock-toggle-btn.locked {
+  color: #dc3545 !important; /* Red for locked */
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.lock-toggle-btn.locked:hover {
+  background-color: rgba(220, 53, 69, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.lock-toggle-btn.unlocked {
+  color: #28a745 !important; /* Green for unlocked */
+  background-color: rgba(40, 167, 69, 0.1);
+}
+
+.lock-toggle-btn.unlocked:hover {
+  background-color: rgba(40, 167, 69, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.lock-toggle-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.lock-toggle-btn:hover i {
+  transform: scale(1.1);
+}
+
+/* Animation for icon change */
+.lock-toggle-btn .bi-lock-fill,
+.lock-toggle-btn .bi-unlock-fill {
+  animation: iconPulse 0.3s ease;
+}
+
+@keyframes iconPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}

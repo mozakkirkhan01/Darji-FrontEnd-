@@ -385,43 +385,43 @@
 
   <router-outlet></router-outlet>
 
-  <!-- 🔐 Password Modal -->
-<div class="modal fade show"
-     tabindex="-1"
-     style="display: block; background: rgba(0,0,0,0.5);"
-     *ngIf="showPasswordModal">
+  <!-- 🔐 Password Modal 2-->
+      <div class="modal fade show"
+          tabindex="-1"
+          style="display: block; background: rgba(0,0,0,0.5);"
+          *ngIf="showPasswordModal">
 
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
 
-      <div class="modal-header">
-        <h5 class="modal-title">🔐 Enter Menu Password</h5>
-        <button type="button" class="btn-close"
-                (click)="showPasswordModal = false"></button>
+            <div class="modal-header">
+              <h5 class="modal-title">🔐 Enter Menu Password</h5>
+              <button type="button" class="btn-close"
+                      (click)="showPasswordModal = false"></button>
+            </div>
+
+            <div class="modal-body">
+              <input type="password"
+                    class="form-control"
+                    placeholder="Password"
+                    [(ngModel)]="enteredPassword"
+                    autofocus>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary"
+                      (click)="showPasswordModal = false">
+                Cancel
+              </button>
+              <button class="btn btn-primary"
+                      (click)="submitPassword()">
+                Unlock
+              </button>
+            </div>
+
+          </div>
+        </div>
       </div>
-
-      <div class="modal-body">
-        <input type="password"
-               class="form-control"
-               placeholder="Password"
-               [(ngModel)]="enteredPassword"
-               autofocus>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-secondary"
-                (click)="showPasswordModal = false">
-          Cancel
-        </button>
-        <button class="btn btn-primary"
-                (click)="submitPassword()">
-          Unlock
-        </button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
