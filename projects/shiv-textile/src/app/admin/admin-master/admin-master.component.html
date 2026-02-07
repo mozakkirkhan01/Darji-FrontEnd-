@@ -85,14 +85,14 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link " routerLink="admin-dashboard">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
       </li><!-- End Dashboard Nav -->
 
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Master Entry</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
@@ -110,124 +110,95 @@
             <a routerLink="product">
               <i class="bi bi-circle"></i><span>Manage Product</span>
             </a> -->
-            <a routerLink="head">
+            <a (click)="checkMenuAccess('reports','/admin/head',$event)">
               <i class="bi bi-circle"></i><span> Head Master</span>
             </a>
-            <a routerLink="supplier">
+            <a (click)="checkMenuAccess('reports','/admin/supplier',$event)">
               <i class="bi bi-circle"></i><span>Manage Supplier</span>
             </a>
-            <a routerLink="employee">
+            <a (click)="checkMenuAccess('reports','/admin/employee',$event)">
               <i class="bi bi-circle"></i><span>Manage Employee</span>
             </a>
           </li>
         </ul>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link collapsed" data-bs-target="#product" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Product</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="product" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a routerLink="unit">
+            <a (click)="checkMenuAccess('reports','/admin/unit',$event)">
               <i class="bi bi-circle"></i><span>Manage Unit</span>
             </a>
-            <a routerLink="category">
+            <a (click)="checkMenuAccess('reports','/admin/category',$event)">
               <i class="bi bi-circle"></i><span>Manage Category</span>
             </a>
-            <a routerLink="size">
+            <a (click)="checkMenuAccess('reports','/admin/size',$event)">
               <i class="bi bi-circle"></i><span>Manage Size</span>
             </a>
-            <a routerLink="new-product">
+            <a (click)="checkMenuAccess('reports','/admin/new-product',$event)">
               <i class="bi bi-circle"></i><span>New Product</span>
             </a>
-            <a routerLink="product">
+            <a (click)="checkMenuAccess('reports','/admin/product',$event)">
               <i class="bi bi-circle"></i><span>List Product</span>
             </a>
-            <a routerLink="product-stock-list">
+            <a (click)="checkMenuAccess('reports','/admin/product-stock-list',$event)">
               <i class="bi bi-circle"></i><span>Stock Detail</span>
             </a>
-            <a routerLink="stock-history">
+            <a (click)="checkMenuAccess('reports','/admin/stock-history',$event)">
               <i class="bi bi-circle"></i><span>Stock History</span>
             </a>
-            <a routerLink="bar-code-print">
+            <a (click)="checkMenuAccess('reports','/admin/bar-code-print',$event)">
               <i class="bi bi-circle"></i><span>Barcode Print</span>
             </a>
-            <a routerLink="barcode-printby-invoice">
+            <a (click)="checkMenuAccess('reports','/admin/barcode-printby-invoice',$event)">
               <i class="bi bi-circle"></i><span>Barcode Print By Invoice</span>
             </a>
-            <a routerLink="product-barcode">
+            <a (click)="checkMenuAccess('reports','/admin/product-barcode',$event)">
               <i class="bi bi-circle"></i><span>Product Barcode</span>
             </a>
           </li>
         </ul>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link collapsed" data-bs-target="#purchase" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Purchase</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="purchase" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a routerLink="purchase">
+            <a  (click)="checkMenuAccess('reports','/admin/purchase',$event)">
               <i class="bi bi-circle"></i><span>New Purchase</span>
             </a>
           </li>
           <li>
-            <a routerLink="purchase-list">
+            <a (click)="checkMenuAccess('reports','/admin/purchase-list',$event)">
               <i class="bi bi-circle"></i><span>Purchase List</span>
             </a>
           </li>
           <li>
-            <a routerLink="goods-return">
+            <a (click)="checkMenuAccess('reports','/admin/goods-return',$event)">
               <i class="bi bi-circle"></i><span>Goods Return</span>
             </a>
           </li>
           <li>
-            <a routerLink="gr-list">
+            <a (click)="checkMenuAccess('reports','/admin/gr-list',$event)">
               <i class="bi bi-circle"></i><span>Goods Return List</span>
             </a>
           </li>
           <li>
-            <a routerLink="print-goods-return">
+            <a (click)="checkMenuAccess('reports','/admin/print-goods-return',$event)">
               <i class="bi bi-circle"></i><span>Goods Return Data</span>
             </a>
           </li>
           <li>
-            <a routerLink="gr-data-report">
+            <a  (click)="checkMenuAccess('reports','/admin/gr-data-report',$event)">
               <i class="bi bi-circle"></i><span>Goods Return Data Report</span>
             </a>
           </li>
         </ul>
       </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#transfer" data-bs-toggle="collapse">
-          <i class="bi bi-menu-button-wide"></i><span>Transfer Stock</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="transfer" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          
-          <li>
-            <a routerLink="transfer-product-to-sv">
-              <i class="bi bi-circle"></i><span>Transfer To SV</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink="transfer-sv-list">
-              <i class="bi bi-circle"></i><span>Transfer SV List</span>
-            </a>
-          </li>
-          
-          <li>
-            <a routerLink="transfer-svdetail">
-              <i class="bi bi-circle"></i><span>Transfer SV Detail</span>
-            </a>
-          </li>
 
-          <li>
-            <a routerLink="transfer-product-to-st">
-              <i class="bi bi-circle"></i><span>Transfer To ST</span>
-            </a>
-          </li>
-        </ul>
-      </li> -->
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#sell" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Sell</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -244,103 +215,96 @@
             </a>
           </li>
           
-          <li>
-            <a routerLink="sell-list">
+          <li *ngIf="!isDarziUser">
+            <a (click)="checkMenuAccess('reports','/admin/sell-list',$event)">
               <i class="bi bi-circle"></i><span>Sell List</span>
             </a>
           </li>
-          <li>
-            <a routerLink="return-sell-product">
+          <li *ngIf="!isDarziUser">
+            <a  (click)="checkMenuAccess('reports','/admin/return-sell-product',$event)">
               <i class="bi bi-circle"></i><span>Return Product</span>
             </a>
           </li>
-          
         </ul>
       </li>
-      <!-- <li class="nav-item">
+
         <a class="nav-link collapsed" data-bs-target="#directsell" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Direct Sell</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="directsell" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           
           <li>
-            <a routerLink="direct-sell">
+            <a (click)="checkMenuAccess('reports','/admin/direct-sell',$event)">
               <i class="bi bi-circle"></i><span>Direct Sell</span>
             </a>
           </li>
         
           <li>
-            <a routerLink="direct-sell-list">
+            <a (click)="checkMenuAccess('reports','/admin/direct-sell-list',$event)">
               <i class="bi bi-circle"></i><span>Direct Sell List</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="direct-sell-return">
+            <a  (click)="checkMenuAccess('reports','/admin/direct-sell-return',$event)">
               <i class="bi bi-circle"></i><span>Direct Sell Return</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="direct-sell-return-detail">
+            <a (click)="checkMenuAccess('reports','/admin/direct-sell-return-detail',$event)">
               <i class="bi bi-circle"></i><span>Direct Sell Return Detail</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="daily-direct-sell-report">
+            <a (click)="checkMenuAccess('reports','/admin/daily-direct-sell-report',$event)">
               <i class="bi bi-circle"></i><span>Daily Direct Sell Report</span>
             </a>
           </li>
 
         </ul>
-      </li> -->
-      <li class="nav-item">
+      
+      <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link collapsed" data-bs-target="#sellreport" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Sell Report</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="sellreport" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           
           <li>
-            <a routerLink="dailysell-list">
+            <a (click)="checkMenuAccess('reports','/admin/dailysell-list',$event)">
               <i class="bi bi-circle"></i><span>Daily Sell List</span>
             </a>
           </li>
           
           <li>
-            <a routerLink="sell-return-list">
+            <a (click)="checkMenuAccess('reports','/admin/sell-return-list',$event)">
               <i class="bi bi-circle"></i><span>Sell Return Details</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="sell-daybook">
+            <a (click)="checkMenuAccess('reports','/admin/sell-daybook',$event)">
               <i class="bi bi-circle"></i><span>Sell Day Book</span>
-            </a>
-          </li>
-
-          <li>
-            <a routerLink="sell-list-by-customer">
-              <i class="bi bi-circle"></i><span>Sell Report By Customer</span>
             </a>
           </li>
         
         </ul>
       </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#gstreport" data-bs-toggle="collapse">
+      <li class="nav-item" *ngIf="!isDarziUser">
+        <a  class="nav-link collapsed" data-bs-target="#gstreport" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>GST Report</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="gstreport" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           
           <li>
-            <a routerLink="sell-gst-report">
+            <a (click)="checkMenuAccess('reports','/admin/sell-gst-report',$event)">
               <i class="bi bi-circle"></i><span>Sell GST Report</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="return-gst-report">
+            <a (click)="checkMenuAccess('reports','/admin/return-gst-report',$event)">
               <i class="bi bi-circle"></i><span>Return GST Report</span>
             </a>
           </li>
@@ -396,24 +360,69 @@
         
         </ul>
       </li> -->
-      <li class="nav-item">
+      <li class="nav-item" >
         <a class="nav-link collapsed" data-bs-target="#customer" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Customer</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="customer" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a routerLink="customer-list">
+            <a  (click)="checkMenuAccess('reports','/admin/customer-list',$event)">
               <i class="bi bi-circle"></i><span>Customer List</span>
             </a>
           </li>
           
         </ul>
       </li>
+      <!-- Add this to your header navigation -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="sell" (click)="lockAllMenus()" style="cursor: pointer;">
+          <i class="bi bi-lock"></i>
+          <span class="d-none d-md-inline">Lock All Menus</span>
+        </a>
+      </li>
     </ul>
-
   </aside><!-- End Sidebar-->
 
   <router-outlet></router-outlet>
+
+  <!-- 🔐 Password Modal -->
+<div class="modal fade show"
+     tabindex="-1"
+     style="display: block; background: rgba(0,0,0,0.5);"
+     *ngIf="showPasswordModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">🔐 Enter Menu Password</h5>
+        <button type="button" class="btn-close"
+                (click)="showPasswordModal = false"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="password"
+               class="form-control"
+               placeholder="Password"
+               [(ngModel)]="enteredPassword"
+               autofocus>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary"
+                (click)="showPasswordModal = false">
+          Cancel
+        </button>
+        <button class="btn btn-primary"
+                (click)="submitPassword()">
+          Unlock
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
