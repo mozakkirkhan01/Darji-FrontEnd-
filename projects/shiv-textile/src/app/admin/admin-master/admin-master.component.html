@@ -228,7 +228,7 @@
         </ul>
       </li>
 
-        <a class="nav-link collapsed" data-bs-target="#directsell" data-bs-toggle="collapse">
+        <!-- <a class="nav-link collapsed" data-bs-target="#directsell" data-bs-toggle="collapse">
           <i class="bi bi-menu-button-wide"></i><span>Direct Sell</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="directsell" class="nav-content collapse " data-bs-parent="#sidebar-nav">
@@ -263,7 +263,7 @@
             </a>
           </li>
 
-        </ul>
+        </ul> -->
       
       <li class="nav-item" *ngIf="!isDarziUser">
         <a class="nav-link collapsed" data-bs-target="#sellreport" data-bs-toggle="collapse">
@@ -322,13 +322,13 @@
           </li> -->
 
           <li>
-            <a routerLink="merge-sell-list">
+            <a (click)="checkMenuAccess('reports','/admin/merge-sell-list',$event)">
               <i class="bi bi-circle"></i><span>Complete Sell list</span>
             </a>
           </li>
 
           <li>
-            <a routerLink="merge-return-list">
+            <a (click)="checkMenuAccess('reports','/admin/merge-return-list',$event)">
               <i class="bi bi-circle"></i><span>Complete Return list</span>
             </a>
           </li>
@@ -380,13 +380,71 @@
           <span class="d-none d-md-inline">Lock All Menus</span>
         </a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="sell" (click)="showChangePasswordModal = true" style="cursor: pointer;">
+          <i class="bi bi-key"></i>
+          <span class="d-none d-md-inline">Change Password</span>
+        </a>
+      </li>
     </ul>
   </aside><!-- End Sidebar-->
 
-  <router-outlet></router-outlet>
 
+<!-- change password modal -->
+  <div class="modal fade show"
+     tabindex="-1"
+     style="display:block;background:rgba(0,0,0,0.5)"
+     *ngIf="showChangePasswordModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">🔑 Change Menu Password</h5>
+        <button class="btn-close"
+                (click)="showChangePasswordModal=false"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="password"
+               class="form-control mb-2"
+               placeholder="Old Password"
+               [(ngModel)]="oldPassword">
+
+        <input type="password"
+               class="form-control mb-2"
+               placeholder="New Password"
+               [(ngModel)]="newPassword">
+
+        <input type="password"
+               class="form-control"
+               placeholder="Confirm Password"
+               [(ngModel)]="confirmPassword">
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary"
+                (click)="showChangePasswordModal=false">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary"
+                (click)="changeMenuPassword()">
+          Change Password
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+  
+
+  <router-outlet></router-outlet>
+  
   <!-- 🔐 Password Modal 2-->
-      <div class="modal fade show"
+      <!-- <div class="modal fade show"
           tabindex="-1"
           style="display: block; background: rgba(0,0,0,0.5);"
           *ngIf="showPasswordModal">
@@ -421,8 +479,215 @@
 
           </div>
         </div>
+      </div> -->
+
+
+
+
+      <style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  .modal.fade.show {
+    font-family: 'DM Sans', sans-serif;
+    background: rgba(8, 10, 18, 0.88) !important;
+    animation: overlayFadeIn 0.25s ease forwards;
+  }
+
+  @keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-dialog.modal-dialog-centered .modal-content {
+    background: linear-gradient(160deg, #13151f 0%, #0d0f18 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03),
+      0 30px 80px rgba(0, 0, 0, 0.7),
+      0 0 60px rgba(88, 101, 242, 0.06);
+    animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    overflow: hidden;
+  }
+
+  @keyframes modalPop {
+    from { opacity: 0; transform: scale(0.92) translateY(16px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0); }
+  }
+
+  .modal-content .modal-header {
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.08), transparent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 22px 26px 18px;
+    position: relative;
+  }
+
+  .modal-content .modal-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(88,101,242,0.5), transparent);
+  }
+
+  .modal-content .modal-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e8eaf6;
+    letter-spacing: -0.2px;
+  }
+
+  .modal-content .btn-close {
+    filter: invert(1);
+    opacity: 0.25;
+    transition: opacity 0.15s;
+    width: 20px; height: 20px;
+  }
+
+  .modal-content .btn-close:hover { opacity: 0.55; }
+
+  .modal-content .modal-body {
+    padding: 32px 26px 24px;
+    background: transparent;
+  }
+
+  .modal-content .form-control {
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.09);
+    border-radius: 14px;
+    color: #e8eaf6;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 300;
+    padding: 22px 24px;
+    height: 80px;
+    letter-spacing: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    caret-color: #5865f2;
+    width: 100%;
+  }
+
+  .modal-content .form-control::placeholder {
+    color: rgba(255,255,255,0.15);
+    letter-spacing: 0;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .modal-content .form-control:focus {
+    background: rgba(88, 101, 242, 0.06);
+    border-color: rgba(88, 101, 242, 0.6);
+    box-shadow: 0 0 0 4px rgba(88, 101, 242, 0.1), inset 0 1px 2px rgba(0,0,0,0.3);
+    color: #fff;
+    outline: none;
+  }
+
+  .modal-content .modal-footer {
+    padding: 16px 26px 24px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    gap: 10px;
+    background: rgba(0,0,0,0.15);
+  }
+
+  .modal-content .btn-secondary {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 11px;
+    color: rgba(255,255,255,0.45);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 12px 22px;
+    transition: all 0.18s;
+  }
+
+  .modal-content .btn-secondary:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    transform: translateY(-1px);
+  }
+
+  .modal-content .btn-primary {
+    background: linear-gradient(135deg, #5865f2 0%, #7c88f5 100%);
+    border: none;
+    border-radius: 11px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 12px 28px;
+    letter-spacing: 0.2px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(88, 101, 242, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modal-content .btn-primary::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .modal-content .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(88, 101, 242, 0.45);
+    filter: brightness(1.08);
+  }
+
+  .modal-content .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(88, 101, 242, 0.3);
+  }
+</style>
+
+<!-- Your original code, untouched -->
+<div class="modal fade show"
+    tabindex="-1"
+    style="display: block; background: rgba(0,0,0,0.5);"
+    *ngIf="showPasswordModal">
+
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">🔐 Enter Menu Password</h5>
+        <button type="button" class="btn-close"
+                (click)="showPasswordModal = false"></button>
       </div>
 
+      <div class="modal-body">
+        <input type="password"
+              class="form-control"
+              placeholder="Password"
+              [(ngModel)]="enteredPassword"
+              autofocus>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary"
+                (click)="showPasswordModal = false">
+          Cancel
+        </button>
+        <button class="btn btn-primary"
+                (click)="submitPassword()">
+          Unlock
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+      
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
