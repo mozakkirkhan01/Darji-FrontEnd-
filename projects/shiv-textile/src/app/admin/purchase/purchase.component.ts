@@ -388,6 +388,8 @@ export class PurchaseComponent implements OnInit {
     this.calculateGST(purchaseProductModel);
   }
   PrintProduct: any = {};
+
+  
   addPurchaseProduct(form: NgForm, isReset: boolean) {
     this.isProductSubmitted = true;
     if (form.invalid) {
