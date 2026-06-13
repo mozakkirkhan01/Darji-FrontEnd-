@@ -99,6 +99,7 @@
                                         <th style="cursor: pointer;" (click)="sort('NetAmount')">Net Price</th>
                                         <th style="cursor: pointer;" (click)="sort('Quantity')">Qty.</th>
                                         <th style="cursor: pointer;" (click)="sort('UnitName')">Unit</th>
+                                        <th>Edit</th>
                                         <th>Barcode</th>
                                     </thead>
                                     <tbody>
@@ -123,6 +124,9 @@
                                             <td>{{model.NetAmount}}</td>
                                             <td>{{model.Quantity}}</td>
                                             <td>{{model.UnitName}}</td>
+                                            <td>
+  <button class="btn btn-sm btn-warning" (click)="openEditModal(model)">Edit</button>
+</td>
                                             <td><button class="btn btn-sm btn-success"
                                                     (click)="getProductBarcode(model)">Print</button></td>
                                         </tr>
@@ -175,4 +179,57 @@
             </div>
         </div>
     </div>
+
+    <div id="edit_modal_popUp" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Stock</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+
+          <div class="col-sm-6 form-group mb-3">
+            <label class="form-label">MRP <span class="text-danger">*</span></label>
+           <input type="number" [(ngModel)]="selectedStock.MRP" name="EditMRP"
+  class="form-control"
+  (ngModelChange)="onMRPChange($event)"
+  [ngClass]="{'is-invalid': editSubmitted && !selectedStock.MRP}">
+            <div class="text-danger" *ngIf="editSubmitted && !selectedStock.MRP">MRP is required.</div>
+          </div>
+
+          <div class="col-sm-6 form-group mb-3">
+            <label class="form-label">Cost Price <span class="text-danger">*</span></label>
+            <input type="number" [(ngModel)]="selectedStock.CostPrice" name="EditCostPrice"
+              class="form-control"
+              [ngClass]="{'is-invalid': editSubmitted && !selectedStock.CostPrice}">
+            <div class="text-danger" *ngIf="editSubmitted && !selectedStock.CostPrice">Cost Price is required.</div>
+          </div>
+
+          <div class="col-sm-6 form-group mb-3">
+            <label class="form-label">Selling Price <span class="text-danger">*</span></label>
+            <input type="number" [(ngModel)]="selectedStock.SellingPrice" name="EditSellingPrice"
+              class="form-control"
+              [ngClass]="{'is-invalid': editSubmitted && !selectedStock.SellingPrice}">
+            <div class="text-danger" *ngIf="editSubmitted && !selectedStock.SellingPrice">Selling Price is required.</div>
+          </div>
+
+          <div class="col-sm-6 form-group mb-3">
+            <label class="form-label">Quantity <span class="text-danger">*</span></label>
+            <input type="number" [(ngModel)]="selectedStock.Quantity" name="EditQuantity"
+              class="form-control"
+              [ngClass]="{'is-invalid': editSubmitted && selectedStock.Quantity === undefined}">
+            <div class="text-danger" *ngIf="editSubmitted && selectedStock.Quantity === undefined">Quantity is required.</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="updateProductStock()">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
 </main>

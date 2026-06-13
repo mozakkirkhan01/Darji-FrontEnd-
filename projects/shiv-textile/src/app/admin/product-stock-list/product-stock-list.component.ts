@@ -154,5 +154,51 @@ export class ProductStockListComponent implements OnInit {
     this.selectedBarcode = obj;
     $('#modal_popUp').modal('show');
   }
+  selectedStock: any = {};
+editSubmitted: boolean = false;
+
+openEditModal(model: any) {
+  this.editSubmitted = false;
+  this.selectedStock = {
+    ProductStockId: model.ProductStockId,
+    MRP: model.MRP,
+    CostPrice: model.CostPrice,
+    SellingPrice: model.SellingPrice,
+    Quantity: model.Quantity
+  };
+  $('#edit_modal_popUp').modal('show');
+}
+
+updateProductStock() {
+  this.editSubmitted = true;
+  if (!this.selectedStock.MRP || !this.selectedStock.CostPrice ||
+      !this.selectedStock.SellingPrice || this.selectedStock.Quantity === undefined) {
+    toastr.error("All fields are required!");
+    return;
+  }
+
+  const obj = {
+    ...this.selectedStock,
+    UpdatedBy: this.employeeDetail?.EmployeeId
+  };
+
+  this.dataLoading = true;
+  this.service.updateProductStock(obj).subscribe((r1: any) => {
+    if (r1.Message === ConstantData.SuccessMessage) {
+      toastr.success("Stock updated successfully!");
+      $('#edit_modal_popUp').modal('hide');
+      this.getOnlyProductStockList();
+    } else {
+      toastr.error(r1.Message);
+    }
+    this.dataLoading = false;
+  }, () => {
+    toastr.error("Error occurred while updating.");
+    this.dataLoading = false;
+  });
+}
+onMRPChange(value: any) {
+  this.selectedStock.SellingPrice = value;
+}
 
 }
