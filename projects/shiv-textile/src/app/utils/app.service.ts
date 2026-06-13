@@ -197,6 +197,9 @@ export class AppService {
   getProductStockDetailList(obj: any) {
     return this.http.post(this.baseUrl + '/api/ProductStock/ProductStockDetailList', obj)
   }
+  updateProductStock(obj: any) {
+  return this.http.post(this.baseUrl + '/api/ProductStock/UpdateProductStock', obj);
+}
 
   
   getFilterProductStockDetailList(obj: any) {
