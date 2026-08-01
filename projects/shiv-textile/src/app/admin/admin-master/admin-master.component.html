@@ -664,6 +664,7 @@
               class="form-control"
               placeholder="Password"
               [(ngModel)]="enteredPassword"
+              (keydown.enter)="submitPassword()"
               autofocus>
       </div>
 
