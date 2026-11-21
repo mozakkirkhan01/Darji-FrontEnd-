@@ -14,7 +14,8 @@ export class AppService {
   constructor(private http: HttpClient) {
 
    this.baseUrl = "http://localhost:3776/";
-    // this.baseUrl = "https://darjiapi.winnexcode.com/";
+    // this.baseUrl = "https://darjiapi.winnexcode.com/"; old
+    // this.baseUrl = "https://darziapi.webaikon.in/";
   }
 
 
@@ -427,5 +428,10 @@ export class AppService {
   }
   printBarCode1(data: any) {
     window.open(`${this.baseUrl}report/index1/${data}`);
+  }
+
+  // Customer Tier Report
+  getCustomerTierReport(obj: any) {
+    return this.http.post(this.baseUrl + 'api/CustomerTier/GetCustomerTierReport', obj);
   }
 }
