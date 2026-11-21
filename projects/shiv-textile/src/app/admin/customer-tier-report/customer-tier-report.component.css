@@ -1,0 +1,26 @@
+.info-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+    font-size: 24px;
+    line-height: 0;
+}
+
+.dataTable-top {
+    padding: 8px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dataTable-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

@@ -1,0 +1,218 @@
+<app-progress *ngIf="dataLoading"></app-progress>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Customer Tier Report</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/admin/admin-dashboard">Home</a></li>
+                <li class="breadcrumb-item">Reports</li>
+                <li class="breadcrumb-item active">Customer Tier Report</li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <!-- Summary Cards -->
+        <div class="row">
+            <!-- Silver Member -->
+            <div class="col-xxl-3 col-md-3">
+                <div class="card info-card" [ngClass]="{'border border-secondary border-2': filter.Tier === 'Silver'}" (click)="selectTier('Silver')" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title">Silver Members <span>| ₹1 to ₹10,000</span></h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #e2e8f0; color: #475569; width: 48px; height: 48px;">
+                                <i class="bi bi-award fs-3"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ Summary.SilverCount || 0 }}</h6>
+                                <span class="text-muted small">Total: </span>
+                                <span class="text-success small fw-bold">₹{{ Summary.SilverRevenue || 0 | number:'1.2-2' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platinum Member -->
+            <div class="col-xxl-3 col-md-3">
+                <div class="card info-card" [ngClass]="{'border border-primary border-2': filter.Tier === 'Platinum'}" (click)="selectTier('Platinum')" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title">Platinum Members <span>| ₹10,001 to ₹40,000</span></h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #e0f2fe; color: #0284c7; width: 48px; height: 48px;">
+                                <i class="bi bi-gem fs-3"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ Summary.PlatinumCount || 0 }}</h6>
+                                <span class="text-muted small">Total: </span>
+                                <span class="text-success small fw-bold">₹{{ Summary.PlatinumRevenue || 0 | number:'1.2-2' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gold Member -->
+            <div class="col-xxl-3 col-md-3">
+                <div class="card info-card" [ngClass]="{'border border-warning border-2': filter.Tier === 'Gold'}" (click)="selectTier('Gold')" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title">Gold Members <span>| Above ₹40,000</span></h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #fef3c7; color: #d97706; width: 48px; height: 48px;">
+                                <i class="bi bi-trophy-fill fs-3"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ Summary.GoldCount || 0 }}</h6>
+                                <span class="text-muted small">Total: </span>
+                                <span class="text-success small fw-bold">₹{{ Summary.GoldRevenue || 0 | number:'1.2-2' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Customers -->
+            <div class="col-xxl-3 col-md-3">
+                <div class="card info-card" [ngClass]="{'border border-dark border-2': filter.Tier === 'All'}" (click)="selectTier('All')" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title">All Customers <span>| Total Revenue</span></h5>
+                        <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background: #f1f5f9; color: #1e293b; width: 48px; height: 48px;">
+                                <i class="bi bi-people-fill fs-3"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6>{{ Summary.TotalCustomers || 0 }}</h6>
+                                <span class="text-muted small">Total: </span>
+                                <span class="text-success small fw-bold">₹{{ Summary.TotalRevenue || 0 | number:'1.2-2' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Form -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <div class="row form-group col-sm-12 align-items-end">
+                            <div class="col-sm-3">
+                                <label>Membership Tier</label>
+                                <select class="form-select" [(ngModel)]="filter.Tier" (change)="getCustomerTierReport()">
+                                    <option value="All">All Tiers</option>
+                                    <option value="Silver">Silver (₹1 - ₹10,000)</option>
+                                    <option value="Platinum">Platinum (₹10,001 - ₹40,000)</option>
+                                    <option value="Gold">Gold (Above ₹40,000)</option>
+                                    <option value="None">No Purchases (₹0)</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3">
+                                <label>From Date</label>
+                                <input type="date" [(ngModel)]="filter.FromDate" class="form-control">
+                            </div>
+                            <div class="col-sm-3">
+                                <label>To Date</label>
+                                <input type="date" [(ngModel)]="filter.ToDate" class="form-control">
+                            </div>
+                            <div class="col-sm-3 d-flex gap-2">
+                                <button (click)="getCustomerTierReport()" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                                <button (click)="resetFilter()" class="btn btn-secondary">
+                                    <i class="bi bi-arrow-counterclockwise"></i> Reset
+                                </button>
+                                <button (click)="exportToExcel()" class="btn btn-success ms-auto">
+                                    <i class="bi bi-file-earmark-excel"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card recent-sales overflow-auto">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="dataTable-top">
+                                <div class="dataTable-dropdown">
+                                    <select class="dataTable-selector form-select form-select-sm" [(ngModel)]="itemPerPage">
+                                        <option *ngFor="let option of pageSize" [value]="option">{{option}}</option>
+                                    </select>
+                                    entries per page
+                                </div>
+                                <div class="dataTable-search">
+                                    <input class="dataTable-input form-control form-control-sm" [(ngModel)]="Search" placeholder="Search..." type="text">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 table-responsive">
+                                <table #table1 class="table table-bordered table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th (click)="sort('CustomerName')" style="cursor: pointer;">Customer Name <i class="bi bi-arrow-down-up"></i></th>
+                                            <th (click)="sort('MobileNo')" style="cursor: pointer;">Mobile No <i class="bi bi-arrow-down-up"></i></th>
+                                            <th>GST No</th>
+                                            <th (click)="sort('Tier')" style="cursor: pointer;">Tier <i class="bi bi-arrow-down-up"></i></th>
+                                            <th (click)="sort('TotalOrders')" style="cursor: pointer;">Total Bills <i class="bi bi-arrow-down-up"></i></th>
+                                            <th (click)="sort('TotalPurchased')" style="cursor: pointer;">Gross Total (₹) <i class="bi bi-arrow-down-up"></i></th>
+                                            <th (click)="sort('TotalReturned')" style="cursor: pointer;">Returns (₹) <i class="bi bi-arrow-down-up"></i></th>
+                                            <th (click)="sort('NetPurchased')" style="cursor: pointer;">Net Purchased (₹) <i class="bi bi-arrow-down-up"></i></th>
+                                            <th>Last Purchase Date</th>
+                                            <th *ngIf="!isExporting">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of CustomerTierList | filter:Search | orderBy:sortKey:reverse | paginate: { itemsPerPage: itemPerPage, currentPage: p }; let i = index">
+                                            <td>{{ (p - 1) * itemPerPage + i + 1 }}</td>
+                                            <td class="fw-bold">{{ item.CustomerName }}</td>
+                                            <td>{{ item.MobileNo }}</td>
+                                            <td>{{ item.GSTNo || '-' }}</td>
+                                            <td>
+                                                <span *ngIf="item.Tier === 'Gold'" class="badge bg-warning text-dark px-2 py-1">
+                                                    <i class="bi bi-trophy-fill"></i> Gold
+                                                </span>
+                                                <span *ngIf="item.Tier === 'Platinum'" class="badge bg-primary px-2 py-1">
+                                                    <i class="bi bi-gem"></i> Platinum
+                                                </span>
+                                                <span *ngIf="item.Tier === 'Silver'" class="badge bg-secondary px-2 py-1">
+                                                    <i class="bi bi-award"></i> Silver
+                                                </span>
+                                                <span *ngIf="item.Tier === 'None'" class="badge bg-light text-muted border px-2 py-1">
+                                                    No Purchases
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ item.TotalOrders }}</td>
+                                            <td class="text-end">₹{{ item.TotalPurchased | number:'1.2-2' }}</td>
+                                            <td class="text-end text-danger">₹{{ item.TotalReturned | number:'1.2-2' }}</td>
+                                            <td class="text-end fw-bold text-success">₹{{ item.NetPurchased | number:'1.2-2' }}</td>
+                                            <td>{{ item.LastPurchaseDate ? (item.LastPurchaseDate | date:'dd-MMM-yyyy') : '-' }}</td>
+                                            <td *ngIf="!isExporting" class="text-center">
+                                                <button class="btn btn-outline-primary btn-sm" (click)="viewCustomer(item.CustomerId)" title="View Purchases">
+                                                    <i class="bi bi-receipt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="CustomerTierList.length === 0">
+                                            <td colspan="11" class="text-center text-muted py-4">No records found.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-lg-12 d-flex justify-content-end mt-2">
+                                <pagination-controls (pageChange)="onTableDataChange($event)"></pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
