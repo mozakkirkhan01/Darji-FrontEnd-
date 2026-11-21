@@ -66,6 +66,7 @@ import { ProductBarcodeComponent } from './admin/product-barcode/product-barcode
 import { MergeSellproductComponent } from './admin/merge-sellproduct/merge-sellproduct.component';
 import { SellDaybookComponent } from './admin/sell-daybook/sell-daybook.component';
 import { SellListByCustomerComponent } from './admin/sell-list-by-customer/sell-list-by-customer.component';
+import { CustomerTierReportComponent } from './admin/customer-tier-report/customer-tier-report.component';
 
 @NgModule({
   declarations: [
@@ -123,6 +124,7 @@ import { SellListByCustomerComponent } from './admin/sell-list-by-customer/sell-
     MergeSellproductComponent,
     SellDaybookComponent,
     SellListByCustomerComponent,
+    CustomerTierReportComponent,
   ],
   imports: [
     BrowserModule,

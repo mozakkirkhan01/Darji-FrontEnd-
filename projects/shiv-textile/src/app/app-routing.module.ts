@@ -50,6 +50,7 @@ import { ProductBarcodeComponent } from './admin/product-barcode/product-barcode
 import { MergeSellproductComponent } from './admin/merge-sellproduct/merge-sellproduct.component';
 import { SellDaybookComponent } from './admin/sell-daybook/sell-daybook.component';
 import { SellListByCustomerComponent } from './admin/sell-list-by-customer/sell-list-by-customer.component';
+import { CustomerTierReportComponent } from './admin/customer-tier-report/customer-tier-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: "admin-login", pathMatch: 'full' },
@@ -76,6 +77,7 @@ const routes: Routes = [
       { path: 'return-sell-product', component: ReturnSellProductComponent },
       { path: 'bar-code-print', component: BarCodePrintComponent },
       { path: 'customer-list', component: CustomerListComponent },
+      { path: 'customer-tier-report', component: CustomerTierReportComponent },
       { path: 'dailysell-list', component: DailysellListComponent },
       { path: 'supplier-payment-detail', component: SupplierPaymentDetailComponent },
       { path: 'sell-return-list', component: SellReturnListComponent },
