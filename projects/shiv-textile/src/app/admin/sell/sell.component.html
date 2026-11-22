@@ -95,15 +95,32 @@
 
                                 <!-- Customer Name field with enhanced validation -->
                                 <div class="col-lg-3 form-group">
-                                    <label class="form-label">Customer Name</label>
+                                    <label class="form-label d-flex justify-content-between align-items-center">
+                                        <span>Customer Name</span>
+                                        <!-- Membership Tier Badge -->
+                                        <span *ngIf="customerTier && customerTier !== 'None'">
+                                            <span *ngIf="customerTier === 'Gold'" class="badge bg-warning text-dark px-2 py-1 shadow-sm">
+                                                <i class="bi bi-trophy-fill"></i> Gold Member
+                                            </span>
+                                            <span *ngIf="customerTier === 'Platinum'" class="badge bg-primary px-2 py-1 shadow-sm">
+                                                <i class="bi bi-gem"></i> Platinum Member
+                                            </span>
+                                            <span *ngIf="customerTier === 'Silver'" class="badge bg-secondary px-2 py-1 shadow-sm">
+                                                <i class="bi bi-award"></i> Silver Member
+                                            </span>
+                                        </span>
+                                    </label>
                                     <input type="text" placeholder="Enter Customer Name" #CustomerName="ngModel"
                                         [(ngModel)]="Sell.CustomerName" name="CustomerName" class="form-control"
                                         (focus)="validateCustomerMobileOnNameFocus()"
                                         [class.is-invalid]="customerMobileError">
 
-                                    <!-- Show selected customer indicator -->
-                                    <div *ngIf="isCustomerSelected && Sell.CustomerId > 0" class="text-success mt-1">
-                                        <small><i class="fas fa-check-circle"></i> Existing customer selected</small>
+                                    <!-- Show selected customer indicator & Tier details -->
+                                    <div *ngIf="isCustomerSelected && Sell.CustomerId > 0" class="d-flex align-items-center justify-content-between text-success mt-1">
+                                        <small><i class="fas fa-check-circle"></i> Existing customer</small>
+                                        <small *ngIf="customerTier && customerTier !== 'None'" class="text-muted">
+                                            This Year: <b class="text-dark">₹{{ customerNetPurchased | number:'1.0-0' }}</b>
+                                        </small>
                                     </div>
                                 </div>
 
