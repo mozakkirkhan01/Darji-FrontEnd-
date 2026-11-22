@@ -55,7 +55,14 @@ export class CustomerTierReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.employeeDetail = this.localService.getEmployeeDetail();
+    this.setInitialDates();
     this.getCustomerTierReport();
+  }
+
+  setInitialDates() {
+    const currentYear = new Date().getFullYear();
+    this.filter.FromDate = this.loadDataService.loadDateYMD(new Date(currentYear, 0, 1));
+    this.filter.ToDate = null;
   }
 
   getCustomerTierReport() {
@@ -93,11 +100,8 @@ export class CustomerTierReportComponent implements OnInit {
   }
 
   resetFilter() {
-    this.filter = {
-      Tier: 'All',
-      FromDate: null,
-      ToDate: null
-    };
+    this.filter.Tier = 'All';
+    this.setInitialDates();
     this.Search = '';
     this.p = 1;
     this.getCustomerTierReport();
@@ -135,6 +139,13 @@ export class CustomerTierReportComponent implements OnInit {
   }
 
   viewCustomer(customerId: number) {
-    this.router.navigate(['/admin/sell-list-by-customer'], { queryParams: { customerId: customerId } });
+    const queryParams: any = { customerId: customerId };
+    if (this.filter.FromDate) {
+      queryParams.fromDate = this.loadDataService.loadDateYMD(this.filter.FromDate);
+    }
+    if (this.filter.ToDate) {
+      queryParams.toDate = this.loadDataService.loadDateYMD(this.filter.ToDate);
+    }
+    this.router.navigate(['/admin/sell-list-by-customer'], { queryParams: queryParams });
   }
 }
