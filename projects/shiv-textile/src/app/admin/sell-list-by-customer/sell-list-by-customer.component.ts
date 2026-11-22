@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 declare var toastr: any;
 declare var $: any;
 
@@ -39,20 +39,41 @@ export class SellListByCustomerComponent implements OnInit {
   loadingCustomers: boolean = false;
   customerSearchTerm: string = '';
   Math = Math; // Fix: Properly assign Math object
+  targetCustomerId: any = null;
 
   constructor(
     private service: AppService,
     private localService: LocalService,
     private loadDataService: LoadDataService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     this.employeeDetail = this.localService.getEmployeeDetail();
     this.sell.ShopId = this.employeeDetail.ShopId;
     
+    const currentYear = new Date().getFullYear();
+    this.sell.FromDate = this.loadDataService.loadDateYMD(new Date(currentYear, 0, 1));
+
     this.initializeSellTotal();
     this.setupSearchListener();
+
+    this.route.queryParams.subscribe((params: any) => {
+      if (params.customerId) {
+        this.targetCustomerId = params.customerId;
+        if (params.fromDate) {
+          this.sell.FromDate = params.fromDate;
+        }
+        if (params.toDate) {
+          this.sell.ToDate = params.toDate;
+        }
+        if (this.AllCustomerList && this.AllCustomerList.length > 0) {
+          this.autoSelectCustomer(this.targetCustomerId);
+        }
+      }
+    });
+
     this.getCustomerList();
   }
 
@@ -124,6 +145,10 @@ export class SellListByCustomerComponent implements OnInit {
           }));
           this.CustomerList = [...this.AllCustomerList];
           console.log('Customers loaded:', this.CustomerList.length); // Debug log
+
+          if (this.targetCustomerId) {
+            this.autoSelectCustomer(this.targetCustomerId);
+          }
         } else {
           console.error('Customer API Response:', response);
           toastr.error(response?.Message || 'Error loading customers');
@@ -139,6 +164,17 @@ export class SellListByCustomerComponent implements OnInit {
         this.CustomerList = [];
       }
     );
+  }
+
+  autoSelectCustomer(customerId: any) {
+    if (!this.AllCustomerList || this.AllCustomerList.length === 0) return;
+    const selectedCustomer = this.AllCustomerList.find(customer => customer.CustomerId == customerId);
+    if (selectedCustomer) {
+      this.SelectedCustomer = selectedCustomer;
+      this.sell.CustomerId = selectedCustomer.CustomerId;
+      this.customerSearchTerm = selectedCustomer.DisplayText;
+      this.getSellList();
+    }
   }
 
   // When customer is selected from autocomplete
