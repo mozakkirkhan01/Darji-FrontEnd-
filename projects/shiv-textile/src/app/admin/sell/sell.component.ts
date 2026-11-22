@@ -28,6 +28,9 @@ export class SellComponent implements OnInit {
   isCustomerSelected: boolean = false;
   showSuggestion: boolean = false;
   suggestedCustomer: any = null;
+  customerTier: string = '';
+  customerNetPurchased: number = 0;
+  customerTierLoading: boolean = false;
   private customerInputSubject = new Subject<string>();
 
   constructor(
@@ -179,6 +182,9 @@ export class SellComponent implements OnInit {
     this.customerMobileWarning = '';
     this.showSuggestion = false;
 
+    // Load membership tier for selected customer
+    this.loadCustomerTier(item.CustomerId);
+
     // Recalculate GST for all products when customer GST changes
     this.recalculateAllProductsGST();
   }
@@ -193,6 +199,35 @@ export class SellComponent implements OnInit {
     this.customerMobileWarning = '';
     this.showSuggestion = false;
     this.suggestedCustomer = null;
+    this.customerTier = '';
+    this.customerNetPurchased = 0;
+  }
+
+  loadCustomerTier(customerId: any) {
+    const id = parseInt(customerId);
+    if (!id || id <= 0) {
+      this.customerTier = '';
+      this.customerNetPurchased = 0;
+      return;
+    }
+    this.customerTierLoading = true;
+    this.service.getCustomerTier(id).subscribe(
+      (response: any) => {
+        this.customerTierLoading = false;
+        if (response && response.Message === ConstantData.SuccessMessage) {
+          this.customerTier = response.Tier || '';
+          this.customerNetPurchased = response.NetPurchased || 0;
+        } else {
+          this.customerTier = '';
+          this.customerNetPurchased = 0;
+        }
+      },
+      (error) => {
+        this.customerTierLoading = false;
+        this.customerTier = '';
+        this.customerNetPurchased = 0;
+      }
+    );
   }
 
 
@@ -235,6 +270,10 @@ export class SellComponent implements OnInit {
 
         // Recalculate totals after loading data
         this.calculateTotal();
+
+        if (this.Sell.CustomerId > 0) {
+          this.loadCustomerTier(this.Sell.CustomerId);
+        }
       } else {
         toastr.error(response.Message);
       }
@@ -741,6 +780,8 @@ export class SellComponent implements OnInit {
     this.Sell.InvoiceDate = this.loadDataService.loadDateYMDT(new Date());
     this.submitted = false;
     this.SellProductList = [];
+    this.customerTier = '';
+    this.customerNetPurchased = 0;
     // this.ProductStockList =[];
     $('#MobileNo').focus();
     $('#MobileNo').keypress(function (event: any) {
